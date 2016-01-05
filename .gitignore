@@ -3,4 +3,5 @@
 *.stl
 *.gcode
 
-libraries/
+libraries/*
+!libraries/libraries.sh
