@@ -14,37 +14,40 @@ l_platform = 175;
 h_platform = 20;
 
 l_lock = 20;
-w_lock = h;
+w_lock = 220;
 h_lock = 5;
 
+// This is the boundary
 // difference(){
 //   cube([l,w,h]);
 //   translate([boundary/2,boundary/2,0])
 //     cube([l-boundary,w-boundary,h]);
 // }
 
-
-difference(){
-  union(){
-    translate([pole_r, pole_r, 0])
-    rotate([0,0,-75])
-      supportBeam(h, pole_r, pole_wall);
-
-    translate([pole_r, w-pole_r, 0])
-    rotate([0,0,-105])
-      supportBeam(h, pole_r, pole_wall);
-
-    translate([l-pole_r, pole_r, 0])
-    rotate([0,0,75])
-      supportBeam(h, pole_r, pole_wall);
-
-    translate([l-pole_r, w-pole_r, 0])
-    rotate([0,0,105])
-      supportBeam(h, pole_r, pole_wall);
-    }
-    translate([l_platform/2,20,h/3-h_lock])
-    cube([l_lock,w_lock,h_lock]);
-}
+//
+//difference(){
+//  union(){
+//    translate([pole_r, pole_r, 0])
+//    rotate([0,0,-75])
+//      supportBeam(h, pole_r, pole_wall);
+//
+//    translate([pole_r, w-pole_r, 0])
+//    rotate([0,0,-105])
+//      supportBeam(h, pole_r, pole_wall);
+//
+//    translate([l-pole_r, pole_r, 0])
+//    rotate([0,0,75])
+//      supportBeam(h, pole_r, pole_wall);
+//
+//    translate([l-pole_r, w-pole_r, 0])
+//    rotate([0,0,105])
+//      supportBeam(h, pole_r, pole_wall);
+//    }
+//    translate([l_platform/2,20,h/3-h_lock])
+//    cube([l_lock,w_lock,h_lock]);
+//}
+//translate([l_platform/2+0.4,200-w_lock,h/3-h_lock])
+cube([l_lock-0.8,w_lock,h_lock]);
 
 
 module supportBeam(h, r_out, wall){
