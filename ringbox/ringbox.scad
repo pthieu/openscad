@@ -1,19 +1,19 @@
 use <MCAD/triangles.scad>;
 
 $fn = 100;
-width = 40;
-depth = 40;
-height = 15;
-wallThickness = 1.5;
-hingeOuter = 7;
-hingeInner = 4;
-hingeInnerSlop = .4;
-hingeFingerSlop = .4;
-fingerLength = hingeOuter/1.65;
-fingerSize = 6.5;
+width = 40; // x
+depth = 40; // y
+height = 15; // z
+wallThickness = 1.5; // affects bottom as well
+hingeOuter = 7; // hinge outter diameter
+hingeInner = 4; // hinge hole
+hingeInnerSlop = .3;
+hingeFingerSlop = .3;
+fingerLength = hingeOuter/1.65; //length of hinge coming out (x and z axis)
+fingerSize = 6.5; // width of hinge circles (y axis) 
 topFingerSize = fingerSize;
-pos = -depth/2;
-latchWidth = 8;
+pos = -depth/2; //??
+latchWidth = 8; // locking latch width (y axis)
 z = 0;
 
 bottom();
