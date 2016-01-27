@@ -3,7 +3,7 @@ use <MCAD/triangles.scad>;
 $fn = 100;
 width = 40; // x
 depth = 40; // y
-height = 15; // z
+height = 10; // z
 wallThickness = 1.5; // affects bottom as well
 hingeOuter = 7; // hinge outter diameter
 hingeInner = 4; // hinge hole
@@ -16,11 +16,25 @@ pos = -depth/2; //??
 latchWidth = 8; // locking latch width (y axis)
 z = 0;
 
+//ring base supports
+ringbase_lw = 20;
+ringbase_h = 5;
+ringbase_wall = 1.5;
+
 bottom();
 top();
 
 module bottom() {
 	union() {
+		// ring base support
+		translate([-width/2 - fingerLength, 0, ringbase_h/2+wallThickness])
+		difference() {
+			cube([ringbase_lw,ringbase_lw,ringbase_h], center=true); // main supports
+			cube([ringbase_lw-ringbase_wall,ringbase_lw-ringbase_wall,ringbase_h], center=true); // inner space
+			cube([ringbase_lw,ringbase_lw/2,ringbase_h], center=true); // x axis space
+			cube([ringbase_lw/2,ringbase_lw,ringbase_h], center=true); // y axis space
+		}
+
 		// main box and cutout
 		difference() {
 			translate([-width - fingerLength, -depth/2, 0]) {
