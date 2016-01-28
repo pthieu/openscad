@@ -21,11 +21,32 @@ ringbase_lw = 20;
 ringbase_h = 5;
 ringbase_wall = 1.5;
 
+//electronics cover
+elec_tolerance = 0.2;
+elec_l = width - (wallThickness * 2) - elec_tolerance;
+elec_w = width - (wallThickness * 2) - elec_tolerance;
+elec_h = 3;
+elec_z = height-elec_h/2+30;
+elec_pillar_lw = ringbase_lw+ringbase_wall;
+elec_pillar_h = height-elec_h-wallThickness;
+
 bottom();
 top();
 
 module bottom() {
 	union() {
+		// cover for electronics
+		translate([-width/2 - fingerLength, 0, elec_z])
+		difference(){
+			union(){
+				cube([elec_l, elec_w, elec_h], center=true);
+				translate([0,0,-elec_pillar_h/2-elec_h/2])
+				cube([elec_pillar_lw, elec_pillar_lw, elec_pillar_h], center=true);
+			}
+			translate([0,0,-height/4])
+			cube([ringbase_lw+elec_tolerance,ringbase_lw+elec_tolerance,height], center=true);
+		}
+
 		// ring base support
 		translate([-width/2 - fingerLength, 0, ringbase_h/2+wallThickness])
 		difference() {
@@ -45,26 +66,26 @@ module bottom() {
 				cube([width - (wallThickness * 2), depth - (wallThickness * 2), height]);
 			}
 
-			// latch cutout
-			translate([-width - fingerLength + (wallThickness/2), (-latchWidth/2) - (hingeFingerSlop/2), wallThickness]) {
-				cube([wallThickness/2 + .1, latchWidth + hingeFingerSlop, height]);
-			}
+			// // latch cutout
+			// translate([-width - fingerLength + (wallThickness/2), (-latchWidth/2) - (hingeFingerSlop/2), wallThickness]) {
+			// 	cube([wallThickness/2 + .1, latchWidth + hingeFingerSlop, height]);
+			// }
 
 						
 		}
 
 		//latch cylinder
-		difference() {
-			translate([-width - fingerLength + (wallThickness/2), -latchWidth/2, height - 1]) {
-				rotate([-90,0,0]) {
-					cylinder(r = 1, h = latchWidth);
-				}
-			}
-			// front wall wipe
-			translate([-width - fingerLength - 5, -depth/2,0]) {
-				cube([5,depth,height]);
-			}
-		}
+		// difference() {
+		// 	translate([-width - fingerLength + (wallThickness/2), -latchWidth/2, height - 1]) {
+		// 		rotate([-90,0,0]) {
+		// 			cylinder(r = 1, h = latchWidth);
+		// 		}
+		// 	}
+		// 	// front wall wipe
+		// 	translate([-width - fingerLength - 5, -depth/2,0]) {
+		// 		cube([5,depth,height]);
+		// 	}
+		// }
 
 		difference() {
 			hull() {
@@ -113,19 +134,17 @@ module top() {
 			translate([fingerLength + wallThickness, -depth/2 + wallThickness, wallThickness]) {
 				cube([width - (wallThickness * 2), depth - (wallThickness * 2), height]);
 			}
-
-			
 		}
 
-		//latch
-		translate([width + fingerLength - wallThickness - 1.5, (-latchWidth/2), 0]) {
-			cube([1.5, latchWidth, height - .5 + 4]);
-		}
-		translate([width + fingerLength - wallThickness, -latchWidth/2, height - .5 + 3]) {
-			rotate([-90,0,0]) {
-				cylinder(r = 1, h = latchWidth);
-			}
-		}
+		// //latch
+		// translate([width + fingerLength - wallThickness - 1.5, (-latchWidth/2), 0]) {
+		// 	cube([1.5, latchWidth, height - .5 + 4]);
+		// }
+		// translate([width + fingerLength - wallThickness, -latchWidth/2, height - .5 + 3]) {
+		// 	rotate([-90,0,0]) {
+		// 		cylinder(r = 1, h = latchWidth);
+		// 	}
+		// }
 
 		difference() {
 			hull() {
