@@ -30,6 +30,18 @@ elec_z = height-elec_h/2+30;
 elec_pillar_lw = ringbase_lw+ringbase_wall;
 elec_pillar_h = height-elec_h-wallThickness;
 
+//speaker
+speaker_outter_l = 30;
+speaker_outter_w = 30;
+speaker_outter_h = 2; // total height of slot (includes wall?)
+speaker_inner_l = 27.5;
+speaker_inner_w = 27.5;
+speaker_inner_h = 1; // height of slot thing that gets slotted into rails
+speaker_slot_wall = 2;
+speaker_x = width/2 + hingeOuter/2+hingeFingerSlop;
+speaker_z = speaker_outter_h/2+wallThickness;
+speaker_insertion_size = 4;
+
 bottom();
 top();
 
@@ -39,10 +51,13 @@ module bottom() {
 		translate([-width/2 - fingerLength, 0, elec_z])
 		difference(){
 			union(){
+				// top cover
 				cube([elec_l, elec_w, elec_h], center=true);
+				// support under cover (in the middle)
 				translate([0,0,-elec_pillar_h/2-elec_h/2])
 				cube([elec_pillar_lw, elec_pillar_lw, elec_pillar_h], center=true);
 			}
+			//cutout in the middle of cover
 			translate([0,0,-height/4])
 			cube([ringbase_lw+elec_tolerance,ringbase_lw+elec_tolerance,height], center=true);
 		}
@@ -126,6 +141,39 @@ module bottom() {
 
 module top() {
 	union() {
+		// support slot for speaker
+		translate([speaker_x,0,speaker_z])
+		difference(){
+			//outter cube
+			cube([speaker_outter_l,speaker_outter_w,speaker_outter_h], center=true);
+			//inner cut bottom
+			translate([0,0,-speaker_inner_h/2])
+			cube([speaker_inner_l,speaker_inner_w,speaker_inner_h], center=true);
+			//inner cut top (z)
+			translate([0,0,speaker_inner_h/2])
+			cube([
+				speaker_inner_l-speaker_slot_wall,
+				speaker_inner_w-speaker_slot_wall,
+				speaker_inner_h],
+				center=true
+			);
+			//bottom and top clears (x axis)
+			cube([speaker_outter_l,speaker_inner_w-speaker_slot_wall*2,speaker_outter_h], center=true);
+			translate([speaker_outter_l/2,0,0])
+			cube([speaker_outter_l,speaker_inner_w-speaker_slot_wall,speaker_outter_h], center=true);
+			//top (x axis), clearing top (z-axis)
+			translate([speaker_outter_l/2,0,-speaker_inner_h/2])
+			cube([speaker_inner_l,speaker_inner_w,speaker_inner_h], center=true);
+			// middle insertion spacing
+			translate([0,0,speaker_inner_h/2])
+			cube([
+				speaker_insertion_size,
+				speaker_inner_w,
+				speaker_inner_h],
+				center=true
+			);
+		}
+
 		difference() {
 			translate([fingerLength, -depth/2, 0]) {
 				cube([width,depth,height - .5]);
