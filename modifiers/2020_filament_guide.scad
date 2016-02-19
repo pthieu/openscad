@@ -22,8 +22,8 @@ font_size = 6;
 
 translate([0,1,0]) rotate([0,0,0]) tool_clip();
 // extension
-translate([width/2-1.1,0,0]) // -1 on x for spacing from rotate
-rotate([0,0,-20])
+//translate([width/2-1,0,0]) // -1 on x for spacing from rotate
+//rotate([0,0,-20])
 //union(){
 //  color("blue")
 //  difference(){
