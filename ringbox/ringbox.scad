@@ -1,9 +1,9 @@
 use <MCAD/triangles.scad>;
 
 $fn = 100;
-width = 40; // x
-depth = 40; // y
-height = 10; // z
+width = 100; // x
+depth = 100; // y
+height = 50; // z
 wallThickness = 1.5; // affects bottom as well
 hingeOuter = 7; // hinge outter diameter
 hingeInner = 4; // hinge hole
@@ -17,7 +17,7 @@ latchWidth = 8; // locking latch width (y axis)
 z = 0;
 
 //ring base supports
-ringbase_lw = 20;
+ringbase_lw = 60;
 ringbase_h = 5;
 ringbase_wall = 1.5;
 
