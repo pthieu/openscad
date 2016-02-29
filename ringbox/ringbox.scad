@@ -3,32 +3,33 @@ use <MCAD/triangles.scad>;
 $fn = 100;
 width = 100; // x
 depth = 100; // y
-height = 50; // z
-wallThickness = 1.5; // affects bottom as well
-hingeOuter = 7; // hinge outter diameter
-hingeInner = 4; // hinge hole
+height = 32; // z
+wallThickness = 3; // affects bottom as well
+hingeOuter = 9; // hinge outter diameter
+hingeInner = 3.1; // hinge hole
 hingeInnerSlop = .3;
 hingeFingerSlop = .3;
 fingerLength = hingeOuter/1.65; //length of hinge coming out (x and z axis)
-fingerSize = 6.5; // width of hinge circles (y axis) 
+fingerSize = 10; // width of hinge circles (y axis) (not radius)
 topFingerSize = fingerSize;
 pos = -depth/2; //??
 latchWidth = 8; // locking latch width (y axis)
 z = 0;
 
+tolerance = 0.2;
 //ring base supports
-ringbase_lw = 60;
-ringbase_h = 5;
-ringbase_wall = 1.5;
+ringbase_lw = 60 + tolerance;
+ringbase_h = 10;
+ringbase_wall = 3;
 
 //electronics cover
 elec_tolerance = 0.2;
 elec_l = width - (wallThickness * 2) - elec_tolerance;
 elec_w = width - (wallThickness * 2) - elec_tolerance;
-elec_h = 3;
-elec_z = height-elec_h/2+30;
-elec_pillar_lw = ringbase_lw+ringbase_wall;
-elec_pillar_h = height-elec_h-wallThickness;
+elec_h = 3; // wall size?
+elec_pillar_lw = ringbase_lw-tolerance+ringbase_wall;
+elec_pillar_h = height-elec_h-wallThickness-elec_tolerance;
+elec_z = elec_pillar_h+elec_h/2+wallThickness;
 
 //speaker
 speaker_outter_l = 30;
@@ -42,33 +43,64 @@ speaker_x = width/2 + hingeOuter/2+hingeFingerSlop;
 speaker_z = speaker_outter_h/2+wallThickness;
 speaker_insertion_size = 4;
 
+//switch holder
+sw_tolerance = tolerance;
+sw_l = 6 + sw_tolerance;
+sw_w = 14 + sw_tolerance;
+sw_h = 10 + sw_tolerance;
+
 bottom();
-top();
+// translate([30,0,30])
+// rotate([0,-90,0])
+// top();
+electronicsCover();
+
+
+module electronicsCover(){
+// cover for electronics
+	translate([-width/2 - fingerLength, 0, elec_z])
+	difference(){
+		union(){
+			// top cover
+			cube([elec_l, elec_w, elec_h], center=true);
+			// support under cover (in the middle)
+			translate([0,0,-elec_pillar_h/2-elec_h/2])
+			cube([
+				elec_pillar_lw,
+				elec_pillar_lw,
+				elec_pillar_h], center=true);
+		}
+		//cutout in the middle of cover
+		translate([0,0,-height/2.3])
+		cube([
+			ringbase_lw+elec_tolerance,
+			ringbase_lw+elec_tolerance,
+			height], center=true);
+	}
+}
 
 module bottom() {
 	union() {
-		// cover for electronics
-		translate([-width/2 - fingerLength, 0, elec_z])
-		difference(){
-			union(){
-				// top cover
-				cube([elec_l, elec_w, elec_h], center=true);
-				// support under cover (in the middle)
-				translate([0,0,-elec_pillar_h/2-elec_h/2])
-				cube([elec_pillar_lw, elec_pillar_lw, elec_pillar_h], center=true);
-			}
-			//cutout in the middle of cover
-			translate([0,0,-height/4])
-			cube([ringbase_lw+elec_tolerance,ringbase_lw+elec_tolerance,height], center=true);
-		}
-
 		// ring base support
+		color("blue")
 		translate([-width/2 - fingerLength, 0, ringbase_h/2+wallThickness])
 		difference() {
-			cube([ringbase_lw,ringbase_lw,ringbase_h], center=true); // main supports
-			cube([ringbase_lw-ringbase_wall,ringbase_lw-ringbase_wall,ringbase_h], center=true); // inner space
-			cube([ringbase_lw,ringbase_lw/2,ringbase_h], center=true); // x axis space
-			cube([ringbase_lw/2,ringbase_lw,ringbase_h], center=true); // y axis space
+			cube([
+				ringbase_lw+ringbase_wall*2,
+				ringbase_lw+ringbase_wall*2,
+				ringbase_h], center=true); // main supports
+			cube([
+				ringbase_lw+ringbase_wall+tolerance,
+				ringbase_lw+ringbase_wall+tolerance,
+				ringbase_h], center=true); // inner space
+			cube([
+				ringbase_lw+ringbase_wall*2,
+				ringbase_lw/2+ringbase_wall*2,
+				ringbase_h], center=true); // x axis space
+			cube([
+				ringbase_lw/2+ringbase_wall*2,
+				ringbase_lw+ringbase_wall*2,
+				ringbase_h], center=true); // y axis space
 		}
 
 		// main box and cutout
@@ -85,8 +117,6 @@ module bottom() {
 			// translate([-width - fingerLength + (wallThickness/2), (-latchWidth/2) - (hingeFingerSlop/2), wallThickness]) {
 			// 	cube([wallThickness/2 + .1, latchWidth + hingeFingerSlop, height]);
 			// }
-
-						
 		}
 
 		//latch cylinder
@@ -103,38 +133,61 @@ module bottom() {
 		// }
 
 		difference() {
-			hull() {
-				translate([0,-depth/2,height]) {
-					rotate([-90,0,0]) {
-						cylinder(r = hingeOuter/2, h = depth);
+			union(){
+				hull() {
+					translate([0,-depth/2,height]) {
+						rotate([-90,0,0]) {
+							cylinder(r = hingeOuter/2, h = depth);
+						}
+					}
+					translate([-fingerLength - .1, -depth/2,height - hingeOuter]){
+						cube([.1,depth,hingeOuter]);
+					}
+					translate([-fingerLength, -depth/2,height-.1]){
+						cube([fingerLength,depth,.1]);
+					}
+					translate([0, -depth/2,height]){
+						rotate([0,45,0]) {
+							cube([hingeOuter/2,depth,.01]);
+						}
 					}
 				}
-				translate([-fingerLength - .1, -depth/2,height - hingeOuter]){
-					cube([.1,depth,hingeOuter]);
-				}
-				translate([-fingerLength, -depth/2,height-.1]){
-					cube([fingerLength,depth,.1]);
-				}
-				translate([0, -depth/2,height]){
-					rotate([0,45,0]) {
-						cube([hingeOuter/2,depth,.01]);
+				for  (i = [-depth/2 + fingerSize:fingerSize*2:depth/2]) {
+					if (i > -width/4){
+						translate([-fingerLength,i - fingerSize + hingeOuter/3/2,1]) {
+							translate([(hingeOuter+hingeInner)/2+0.2,0,height-hingeOuter/2])
+							rotate([90,3,0])
+							linear_extrude(height=hingeOuter/3)
+								polygon(points=[[0,0],[0,hingeOuter],[hingeOuter,hingeOuter]]);
+						}
 					}
 				}
 			}
 			// finger cutouts
-
 			for  (i = [-depth/2 + fingerSize:fingerSize*2:depth/2]) {
 				translate([-fingerLength,i - (fingerSize/2) - (hingeFingerSlop/2),0]) {
 					cube([fingerLength*2,fingerSize + hingeFingerSlop,height*2]);
 				}
 			}
-		}
-
-		// center rod
-		translate([0, -depth/2, height]) {
-			rotate([-90,0,0]) {
-				cylinder(r = hingeInner /2, h = depth);
+			// center rod
+			translate([0, -depth/2, height]) {
+				rotate([-90,0,0]) {
+					cylinder(r = hingeInner/2-0.1, h = depth);
+				}
 			}
+		}
+		// Switch holder
+		translate([-width+sw_l/2-wallThickness/2, depth/2-sw_w+wallThickness, height-sw_h+0.2])
+		difference(){
+			cube([sw_l+wallThickness,sw_w+wallThickness,sw_h+wallThickness], center=true);
+			translate([0,0,wallThickness/2])
+			cube([sw_l,sw_w,sw_h], center=true);
+		}
+		translate([-width+sw_l/2-wallThickness/2, -depth/2+sw_w-wallThickness, height-sw_h+0.2])
+		difference(){
+			cube([sw_l+wallThickness,sw_w+wallThickness,sw_h+wallThickness], center=true);
+			translate([0,0,wallThickness/2])
+			cube([sw_l,sw_w,sw_h], center=true);
 		}
 	}
 }

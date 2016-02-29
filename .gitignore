@@ -1,6 +1,5 @@
 ._*
 
-*.stl
 *.gcode
 
 libraries/*
