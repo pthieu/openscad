@@ -3,7 +3,7 @@ use <MCAD/triangles.scad>;
 $fn = 100;
 width = 100; // x
 depth = 100; // y
-height = 32; // z
+height = 45; // z
 wallThickness = 3; // affects bottom as well
 hingeOuter = 9; // hinge outter diameter
 hingeInner = 3.1; // hinge hole
@@ -18,7 +18,8 @@ z = 0;
 
 tolerance = 0.2;
 //ring base supports
-ringbase_lw = 60 + tolerance;
+ringbase_l = 60 + tolerance;
+ringbase_w = 60 + tolerance;
 ringbase_h = 10;
 ringbase_wall = 3;
 
@@ -27,8 +28,9 @@ elec_tolerance = 0.2;
 elec_l = width - (wallThickness * 2) - elec_tolerance;
 elec_w = width - (wallThickness * 2) - elec_tolerance;
 elec_h = 3; // wall size?
-elec_pillar_lw = ringbase_lw-tolerance+ringbase_wall;
-elec_pillar_h = height-elec_h-wallThickness-elec_tolerance;
+elec_pillar_l = ringbase_l-tolerance+ringbase_wall;
+elec_pillar_w = ringbase_w-tolerance+ringbase_wall;
+elec_pillar_h = height-elec_h-wallThickness-elec_tolerance*2;
 elec_z = elec_pillar_h+elec_h/2+wallThickness;
 
 //speaker
@@ -52,7 +54,7 @@ sw_h = 10 + sw_tolerance;
 bottom();
 // translate([30,0,30])
 // rotate([0,-90,0])
-// top();
+top();
 electronicsCover();
 
 
@@ -66,15 +68,15 @@ module electronicsCover(){
 			// support under cover (in the middle)
 			translate([0,0,-elec_pillar_h/2-elec_h/2])
 			cube([
-				elec_pillar_lw,
-				elec_pillar_lw,
+				elec_pillar_l,
+				elec_pillar_w,
 				elec_pillar_h], center=true);
 		}
 		//cutout in the middle of cover
 		translate([0,0,-height/2.3])
 		cube([
-			ringbase_lw+elec_tolerance,
-			ringbase_lw+elec_tolerance,
+			ringbase_l+elec_tolerance,
+			ringbase_w+elec_tolerance,
 			height], center=true);
 	}
 }
@@ -86,20 +88,20 @@ module bottom() {
 		translate([-width/2 - fingerLength, 0, ringbase_h/2+wallThickness])
 		difference() {
 			cube([
-				ringbase_lw+ringbase_wall*2,
-				ringbase_lw+ringbase_wall*2,
+				ringbase_l+ringbase_wall*2,
+				ringbase_w+ringbase_wall*2,
 				ringbase_h], center=true); // main supports
 			cube([
-				ringbase_lw+ringbase_wall+tolerance,
-				ringbase_lw+ringbase_wall+tolerance,
+				ringbase_l+ringbase_wall+tolerance,
+				ringbase_w+ringbase_wall+tolerance,
 				ringbase_h], center=true); // inner space
 			cube([
-				ringbase_lw+ringbase_wall*2,
-				ringbase_lw/2+ringbase_wall*2,
+				ringbase_l+ringbase_wall*2,
+				ringbase_w/2+ringbase_wall*2,
 				ringbase_h], center=true); // x axis space
 			cube([
-				ringbase_lw/2+ringbase_wall*2,
-				ringbase_lw+ringbase_wall*2,
+				ringbase_l/2+ringbase_wall*2,
+				ringbase_w+ringbase_wall*2,
 				ringbase_h], center=true); // y axis space
 		}
 
