@@ -3,7 +3,7 @@ use <MCAD/triangles.scad>;
 $fn = 100;
 width = 100; // x
 depth = 100; // y
-height = 45; // z
+height = 50; // z
 wallThickness = 3; // affects bottom as well
 hingeOuter = 9; // hinge outter diameter
 hingeInner = 3.1; // hinge hole
@@ -16,9 +16,9 @@ pos = -depth/2; //??
 latchWidth = 8; // locking latch width (y axis)
 z = 0;
 
-tolerance = 0.2;
+tolerance = 0.4;
 //ring base supports
-ringbase_l = 60 + tolerance;
+ringbase_l = 65 + tolerance;
 ringbase_w = 60 + tolerance;
 ringbase_h = 10;
 ringbase_wall = 3;
@@ -28,8 +28,8 @@ elec_tolerance = 0.2;
 elec_l = width - (wallThickness * 2) - elec_tolerance;
 elec_w = width - (wallThickness * 2) - elec_tolerance;
 elec_h = 3; // wall size?
-elec_pillar_l = ringbase_l-tolerance+ringbase_wall;
-elec_pillar_w = ringbase_w-tolerance+ringbase_wall;
+elec_pillar_l = ringbase_l+ringbase_wall;
+elec_pillar_w = ringbase_w+ringbase_wall;
 elec_pillar_h = height-elec_h-wallThickness-elec_tolerance*2;
 elec_z = elec_pillar_h+elec_h/2+wallThickness;
 
@@ -48,14 +48,15 @@ speaker_insertion_size = 4;
 //switch holder
 sw_tolerance = tolerance;
 sw_l = 6 + sw_tolerance;
-sw_w = 14 + sw_tolerance;
-sw_h = 10 + sw_tolerance;
+sw_w = 13.5 + sw_tolerance;
+sw_h = 8 + sw_tolerance;
+sw_z_offset = -4;
 
 bottom();
 // translate([30,0,30])
 // rotate([0,-90,0])
-top();
-electronicsCover();
+// top();
+// electronicsCover();
 
 
 module electronicsCover(){
@@ -179,13 +180,13 @@ module bottom() {
 			}
 		}
 		// Switch holder
-		translate([-width+sw_l/2-wallThickness/2, depth/2-sw_w+wallThickness, height-sw_h+0.2])
+		translate([-width+sw_l/2-wallThickness/2, depth/2-sw_w+wallThickness, height-sw_h+sw_z_offset])
 		difference(){
 			cube([sw_l+wallThickness,sw_w+wallThickness,sw_h+wallThickness], center=true);
 			translate([0,0,wallThickness/2])
 			cube([sw_l,sw_w,sw_h], center=true);
 		}
-		translate([-width+sw_l/2-wallThickness/2, -depth/2+sw_w-wallThickness, height-sw_h+0.2])
+		translate([-width+sw_l/2-wallThickness/2, -depth/2+sw_w-wallThickness, height-sw_h+sw_z_offset])
 		difference(){
 			cube([sw_l+wallThickness,sw_w+wallThickness,sw_h+wallThickness], center=true);
 			translate([0,0,wallThickness/2])
