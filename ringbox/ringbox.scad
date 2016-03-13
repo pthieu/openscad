@@ -34,16 +34,16 @@ elec_pillar_h = height-elec_h-wallThickness-elec_tolerance*2;
 elec_z = elec_pillar_h+elec_h/2+wallThickness;
 
 //speaker
-speaker_outter_l = 30;
-speaker_outter_w = 30;
+speaker_outter_l = 58;
+speaker_outter_w = 58;
 speaker_outter_h = 2; // total height of slot (includes wall?)
-speaker_inner_l = 27.5;
-speaker_inner_w = 27.5;
+speaker_inner_l = 53;
+speaker_inner_w = 53;
 speaker_inner_h = 1; // height of slot thing that gets slotted into rails
-speaker_slot_wall = 2;
-speaker_x = width/2 + hingeOuter/2+hingeFingerSlop;
+speaker_slot_wall = 4;
+speaker_x = width/2 + hingeOuter/2+hingeFingerSlop + 10;
 speaker_z = speaker_outter_h/2+wallThickness;
-speaker_insertion_size = 4;
+speaker_insertion_size = 8;
 
 //switch holder
 sw_tolerance = tolerance;
@@ -52,10 +52,10 @@ sw_w = 13.5 + sw_tolerance;
 sw_h = 8 + sw_tolerance;
 sw_z_offset = -4;
 
-bottom();
+// bottom();
 // translate([30,0,30])
 // rotate([0,-90,0])
-// top();
+top();
 // electronicsCover();
 
 
@@ -228,6 +228,13 @@ module top() {
 				speaker_inner_h],
 				center=true
 			);
+			translate([speaker_inner_l/2,0,speaker_inner_h/2])
+			cube([
+				speaker_insertion_size,
+				speaker_inner_w,
+				speaker_inner_h],
+				center=true
+			);
 		}
 
 		difference() {
@@ -287,6 +294,27 @@ module top() {
 					cylinder(r = hingeInner /2 + hingeInnerSlop, h = depth);
 				}
 			}
+		}
+
+		// switch trigger
+		translate([width-1,depth/2-wallThickness*2-sw_w,height-wallThickness+1]){
+			sw_click_h=10;
+			sw_click_r=1.5;
+			cylinder(r=sw_click_r, h=sw_click_h);
+			translate([4,-sw_click_r,-sw_click_h/2])
+			rotate([90,0,180])
+			linear_extrude(height=sw_click_r*2)
+				polygon(points=[[0,-5],[0,sw_l],[sw_l,sw_l]]);
+		}
+
+		translate([width-1,-(depth/2-wallThickness*2-sw_w),height-wallThickness+1]){
+			sw_click_h=10;
+			sw_click_r=1.5;
+			cylinder(r=sw_click_r, h=sw_click_h);
+			translate([4,-sw_click_r,-sw_click_h/2])
+			rotate([90,0,180])
+			linear_extrude(height=sw_click_r*2)
+				polygon(points=[[0,-5],[0,sw_l],[sw_l,sw_l]]);
 		}
 	}
 }
