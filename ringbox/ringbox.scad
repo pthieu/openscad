@@ -57,6 +57,8 @@ sw_z_offset = -4;
 // rotate([0,-90,0])
 top();
 // electronicsCover();
+translate([0,0,5])
+speaker_holder();
 
 
 module electronicsCover(){
@@ -191,6 +193,33 @@ module bottom() {
 			cube([sw_l+wallThickness,sw_w+wallThickness,sw_h+wallThickness], center=true);
 			translate([0,0,wallThickness/2])
 			cube([sw_l,sw_w,sw_h], center=true);
+		}
+	}
+}
+
+module speaker_holder() {
+	slide_h = 1;
+	slide_tolerance = 0.4;
+	slide_w = speaker_inner_w-speaker_slot_wall-slide_tolerance;
+	slide_l = speaker_inner_l;
+	translate([slide_l/2+depth/2-wallThickness*3,0,10])
+	union(){
+		cube([slide_l, slide_w, slide_h],center=true);
+		translate([-speaker_insertion_size*1.3,0,0])
+		union(){
+			cube([
+				speaker_insertion_size,
+				speaker_inner_w-slide_tolerance/2,
+				slide_h],
+				center=true
+			);
+			translate([speaker_inner_l/2,0,0])
+			cube([
+				speaker_insertion_size,
+				speaker_inner_w-slide_tolerance/2,
+				slide_h],
+				center=true
+			);
 		}
 	}
 }
