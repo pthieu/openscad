@@ -55,11 +55,72 @@ sw_z_offset = -4;
 // bottom();
 // translate([30,0,30])
 // rotate([0,-90,0])
-top();
+// top();
 // electronicsCover();
-translate([0,0,5])
-speaker_holder();
+// translate([0,0,15])
+// speaker_holder();
+translate([0,0,50])
+ledCovers();
 
+module ledCovers(){
+	length_subtract = 5;
+	angle = 47;
+	angle_front = 47;
+	ledCover_wall = 2;
+	outter_w = elec_w;
+	outter_w_front = elec_w-28;
+	outter_l = (elec_w-elec_pillar_w)/2+wallThickness/2-2;
+	depth_offset = tan(90-angle)*(elec_w-elec_pillar_w)/2;
+	depth_offset_front = tan(angle_front)*(elec_w-elec_pillar_w)/2;
+	// translate([-outter_w-8.5,-outter_l-elec_pillar_w/2+wallThickness/2,0])
+	// ledCover();
+	// mirror([0,1,0])
+	// translate([-outter_w-8.5,-outter_l-elec_pillar_w/2+wallThickness/2,0])
+	// ledCover();
+	color("blue")
+	translate([-outter_w+(depth_offset_front-length_subtract)/8+1,outter_w_front/2-(depth_offset_front-length_subtract)/2+3,0])
+	ledCover_front();
+
+	module ledCover(){
+		difference(){
+			linear_extrude(height=10+wallThickness)
+				polygon(points=[
+					[0,0],
+					[outter_w, 0],
+					[outter_w-depth_offset+ledCover_wall, outter_l],
+					[depth_offset-ledCover_wall, outter_l]
+				]);
+			translate([0,0,-ledCover_wall])
+			linear_extrude(height=10+wallThickness)
+				polygon(points=[
+					[ledCover_wall*2,ledCover_wall],
+					[outter_w-ledCover_wall*2, ledCover_wall],
+					[outter_w-depth_offset, outter_l],
+					[depth_offset, outter_l]
+				]);
+		}
+	}
+	module ledCover_front(){
+		rotate([0,0,180])
+		difference(){
+			linear_extrude(height=10+wallThickness)
+				polygon(points=[
+					[0,0],
+					[0, outter_w_front-length_subtract],
+					[depth_offset_front-length_subtract, outter_w_front-depth_offset_front+length_subtract],
+					[depth_offset_front-length_subtract, depth_offset_front-length_subtract*2]
+				]);
+			translate([-ledCover_wall,0,-ledCover_wall])
+			linear_extrude(height=10+wallThickness)
+				polygon(points=[
+					[0,0],
+					[0, outter_w_front-length_subtract],
+					[depth_offset_front-length_subtract, outter_w_front-depth_offset_front+length_subtract],
+					[depth_offset_front-length_subtract, depth_offset_front-length_subtract*2]
+				]);
+		}
+	}
+}
 
 module electronicsCover(){
 // cover for electronics
@@ -198,25 +259,25 @@ module bottom() {
 }
 
 module speaker_holder() {
-	slide_h = 1;
-	slide_tolerance = 0.4;
+	slide_h = 0.9;
+	slide_tolerance = 0.8;
 	slide_w = speaker_inner_w-speaker_slot_wall-slide_tolerance;
 	slide_l = speaker_inner_l;
-	translate([slide_l/2+depth/2-wallThickness*3,0,10])
+	translate([slide_l/2+depth/2-wallThickness*3,0,0])
 	union(){
 		cube([slide_l, slide_w, slide_h],center=true);
 		translate([-speaker_insertion_size*1.3,0,0])
 		union(){
 			cube([
-				speaker_insertion_size,
-				speaker_inner_w-slide_tolerance/2,
+				speaker_insertion_size-slide_tolerance,
+				speaker_inner_w-slide_tolerance*2,
 				slide_h],
 				center=true
 			);
 			translate([speaker_inner_l/2,0,0])
 			cube([
-				speaker_insertion_size,
-				speaker_inner_w-slide_tolerance/2,
+				speaker_insertion_size-slide_tolerance,
+				speaker_inner_w-slide_tolerance*2,
 				slide_h],
 				center=true
 			);
