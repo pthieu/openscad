@@ -1,4 +1,5 @@
 use <MCAD/triangles.scad>;
+use <text_on.scad>;
 
 $fn = 100;
 width = 100; // x
@@ -57,10 +58,10 @@ sw_z_offset = -4;
 // rotate([0,-90,0])
 // top();
 // electronicsCover();
-// translate([0,0,15])
-// speaker_holder();
-translate([0,0,50])
-ledCovers();
+translate([0,0,0.9+wallThickness])
+speaker_holder();
+// translate([0,0,50])
+// ledCovers();
 
 module ledCovers(){
 	length_subtract = 5;
@@ -263,24 +264,91 @@ module speaker_holder() {
 	slide_tolerance = 0.8;
 	slide_w = speaker_inner_w-speaker_slot_wall-slide_tolerance;
 	slide_l = speaker_inner_l;
-	translate([slide_l/2+depth/2-wallThickness*3,0,0])
-	union(){
-		cube([slide_l, slide_w, slide_h],center=true);
-		translate([-speaker_insertion_size*1.3,0,0])
-		union(){
-			cube([
-				speaker_insertion_size-slide_tolerance,
-				speaker_inner_w-slide_tolerance*2,
-				slide_h],
-				center=true
-			);
-			translate([speaker_inner_l/2,0,0])
-			cube([
-				speaker_insertion_size-slide_tolerance,
-				speaker_inner_w-slide_tolerance*2,
-				slide_h],
-				center=true
-			);
+	speaker_r = 20;
+	speaker_h = 7+1;
+	speaker_tolerance = 0.4;
+	speaker_wall = 1.5;
+	speaker_ceiling = 2;
+	rail_w = 2;
+	rail_l = speaker_r*2+speaker_wall*3;
+	wire_h = 5;
+	wire_w = 8;
+	wire_l = 10;
+	wire_wall = 2;
+	// translate([slide_l/2+depth/2-wallThickness*3,0,0])
+	// difference(){
+	// 	union(){
+	// 		cube([slide_l, slide_w, slide_h],center=true);
+	// 		translate([-speaker_insertion_size*1.3,0,0])
+	// 		union(){
+	// 			cube([
+	// 				speaker_insertion_size-slide_tolerance,
+	// 				speaker_inner_w-slide_tolerance*2,
+	// 				slide_h],
+	// 				center=true
+	// 			);
+	// 			translate([speaker_inner_l/2,0,0])
+	// 			cube([
+	// 				speaker_insertion_size-slide_tolerance,
+	// 				speaker_inner_w-slide_tolerance*2,
+	// 				slide_h],
+	// 				center=true
+	// 			);
+	// 		}
+	// 		// Speaker slot
+	// 		translate([0,0,speaker_h/2+slide_h/2])
+	// 		cylinder(r = speaker_r+speaker_wall, h = speaker_h, center=true);	
+	// 		// Logo
+	// 		translate([0,0,speaker_h+slide_h/2+1])
+	// 		rotate([0,0,-90])
+	// 		text_extrude("PGT", size=3.5, extrusion_height=2, center=true);
+	// 		translate([0,0,speaker_h+slide_h/2])
+	// 		cube([rail_l,rail_w,2], center=true);
+	// 		translate([0,0,speaker_h+slide_h/2])
+	// 		rotate([0,0,45])
+	// 		cube([rail_l,rail_w,2], center=true);
+	// 		translate([0,0,speaker_h+slide_h/2])
+	// 		rotate([0,0,90])
+	// 		cube([rail_l,rail_w,2], center=true);
+	// 		translate([0,0,speaker_h+slide_h/2])
+	// 		rotate([0,0,135])
+	// 		cube([rail_l,rail_w,2], center=true);
+	// 		// Railing
+	// 		rotate([0,0,180])
+	// 		translate([speaker_r+wire_l/3+0.15,0,wire_h/2-slide_h/2+wire_wall/4])
+	// 		cube([wire_l-wire_wall*2, wire_w+wire_wall, wire_h+wire_wall/2], center=true);
+	// 	}
+	// 	rotate([0,0,180])
+	// 	translate([speaker_r+wire_l/2,0,wire_h/2-slide_h/2])
+	// 	cube([wire_l, wire_w, wire_h], center=true);
+	// 	cylinder(r = speaker_r+speaker_tolerance, h = speaker_h*2+slide_h, center=true);
+	// }
+	wire_rail_l = wire_l + 22;
+	// Speaker holder wire rail
+	rotate([90,0,0]){
+		difference(){
+			color("purple")
+			translate([wire_rail_l/2+11,0,wire_h/2-speaker_tolerance])
+			difference(){
+				cube([wire_rail_l+wire_h, wire_w-speaker_tolerance*2, wire_h-speaker_tolerance], center=true);
+				translate([0,0,-speaker_wall/2])
+				cube([wire_rail_l+wire_h, wire_w-speaker_tolerance*2-speaker_wall, wire_h-speaker_tolerance-speaker_wall/2], center=true);
+			}
+			translate([wire_rail_l/2-wire_h-speaker_tolerance*2,0,height/2-wallThickness-speaker_tolerance+slide_h])
+			rotate([0,90,0])
+			cube([height-wallThickness, wire_w-speaker_tolerance*2-speaker_wall, wire_h-speaker_tolerance-speaker_wall/2], center=true);
+		}
+		difference(){
+			color("orange")
+			translate([wire_rail_l/2-wire_h-speaker_tolerance/2,0,height/2-wallThickness+speaker_tolerance+slide_h])
+			rotate([0,90,0])
+			difference(){
+				cube([height-wallThickness, wire_w-speaker_tolerance*2, wire_h-speaker_tolerance], center=true);
+				translate([0,0,-speaker_wall/2])
+				cube([height-wallThickness, wire_w-speaker_tolerance*2-speaker_wall, wire_h-speaker_tolerance-speaker_wall/2], center=true);
+			}
+			translate([0,0,speaker_wall])
+			cube([wire_rail_l+wire_h, wire_w-speaker_tolerance*2-speaker_wall, wire_h-speaker_tolerance-speaker_wall/2], center=true);
 		}
 	}
 }
