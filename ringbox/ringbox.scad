@@ -56,10 +56,10 @@ sw_z_offset = -4;
 // bottom();
 // translate([30,0,30])
 // rotate([0,-90,0])
-// top();
+top();
 // electronicsCover();
-translate([0,0,0.9+wallThickness])
-speaker_holder();
+// translate([0,0,0.9+wallThickness])
+// speaker_holder();
 // translate([0,0,50])
 // ledCovers();
 
@@ -343,7 +343,7 @@ module speaker_holder() {
 			translate([wire_rail_l/2-wire_h-speaker_tolerance/2,0,height/2-wallThickness+speaker_tolerance+slide_h])
 			rotate([0,90,0])
 			difference(){
-				cube([height-wallThickness, wire_w-speaker_tolerance*2, wire_h-speaker_tolerance], center=true);
+				cube([height-wallThickness-1, wire_w-speaker_tolerance*2, wire_h-speaker_tolerance], center=true);
 				translate([0,0,-speaker_wall/2])
 				cube([height-wallThickness, wire_w-speaker_tolerance*2-speaker_wall, wire_h-speaker_tolerance-speaker_wall/2], center=true);
 			}

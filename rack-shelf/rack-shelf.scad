@@ -47,7 +47,7 @@ h_lock = 5;
 //    cube([l_lock,w_lock,h_lock]);
 //}
 //translate([l_platform/2+0.4,200-w_lock,h/3-h_lock])
-cube([l_lock-0.8,w_lock,h_lock]);
+cube([l_lock-1.2,w_lock,h_lock]);
 
 
 module supportBeam(h, r_out, wall){
