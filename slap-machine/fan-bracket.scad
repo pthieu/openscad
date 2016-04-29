@@ -3,7 +3,7 @@ $fn=72;
 tolerance = 0.6;
 
 r_bar = (40+tolerance)/2; // Actual bar diameter is 3.7-3.8mm
-h_bar = 5;
+h_bar = 3;
 w_slit = 2;
 wall = 2;
 
@@ -19,8 +19,8 @@ fanHeadBracket();
 module fanHeadBracket(){
   difference(){
     union(){
-      // Fan head bracket wall
       cylinder(r=r_sleeve, h=h_sleeve);
+      // Fan head bracket wall
       cylinder(r=r_sleeve+2, h=h_sleeve);
       // Fan head bracket fins
       fanHeadBracketFin();
@@ -31,15 +31,15 @@ module fanHeadBracket(){
       rotate([0,0,270])
       fanHeadBracketFin();
     }
-    cylinder(r=r_bar-wall, h=h_bar);
+    // cylinder(r=r_bar-wall, h=h_bar);
     // Slit in ring
     translate([0,-w_slit/2,0])
     rotate([0,0,-45])
     cube([r_bar*3, w_slit, h_bar]);
     // Under fan head, makes circular clearing
     color("blue")
-    translate([0,0,-h_bar*2])
-    cylinder(r=r_bar, h=h_bar*2);
+    translate([0,0,-h_bar*10])
+    cylinder(r=r_bar, h=h_bar*10);
   }
 }
 
@@ -48,16 +48,27 @@ module fanHeadBracketFin(){
   a = 28; // wideness/2
   b = 11+z_fin_offset; // height/2
   h = 1; // height of slices in curve
-  translate([-a/2,-r_bar+depth/2,2+z_fin_offset])
-  rotate([180,0,0])
-  hull(){
-    fanBladeHullStick();
-    for(x=[0:7:a]) {
-      y = sqrt((pow(a*b,2)-pow(b*x,2))/pow(a,2));
-      // translate([x,0,0])
-      // cube([w,depth,y]);
-      translate([x,0,y])
+  w_bladeHook = 6;
+  h_bladeHook = 4;
+  h_bladeHookSlot = 2;
+  translate([-a/2,-r_bar+depth/2,z_fin_offset]){
+    rotate([180,0,0])
+    hull() {
       fanBladeHullStick();
+      for(x=[0:7:a]) {
+        y = sqrt((pow(a*b,2)-pow(b*x,2))/pow(a,2));
+        // translate([x,0,0])
+        // cube([w,depth,y]);
+        translate([x,0,y])
+        fanBladeHullStick();
+      }
+    }
+    translate([0, -depth/2, -b-w/2-h_bladeHook])
+    color("red")
+    difference(){
+      cube([w_bladeHook, depth, h_bladeHook]);
+      translate([wall+1, 0, (h_bladeHook -h_bladeHookSlot)])
+      cube([w_bladeHook, depth, h_bladeHookSlot]);
     }
   }
 }
