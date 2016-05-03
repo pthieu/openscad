@@ -6,7 +6,7 @@ wall = 2;
 // Pole Bracket
 r_pole = 10 + tolerance/2;
 r_poleWrapper = r_pole + wall+1;
-h_poleWrapper = 20; // Full size 80
+h_poleWrapper = 80; // Full size 80
 
 // Fan head bracket
 w_slit = 2;
@@ -18,10 +18,61 @@ z_poleWrapper = 3; // Pole Bracket
 // Fin shape of fan
 w = 0.5; // width of each slice in curve
 depth_fanHeadBracketFin = 8; // how deep curve is (or how fat)
-translate([0,0,16]) {
-  // fanHeadBracket();
-  translate([0,0,z_poleWrapper])
-  poleBracket();
+// translate([0,0,16]) {
+//   fanHeadBracket();
+//   translate([0,0,z_poleWrapper])
+//   poleBracket();
+// }
+fanAdapter();
+
+module fanAdapter(){
+  r=(33.3+tolerance)/2;
+  h=15;
+
+  h_shell = 10;
+  r_shell = r_fanHeadBracket-tolerance/2+0.15; //thickness of outter shell
+  w_leg = 8;
+  depth_leg = 4;
+
+  r_axle = (4+tolerance)/2; // radius of the motor's axle
+  h_axle = 27;
+  w_slit = wall*2+0.1; // width of slit in axle, to give some tolerance
+
+  l_axleSupport = r_shell*2-1;
+  w_axleSupport = wall;
+  h_axleSupport = h_shell-wall;
+
+  // inner bracket on motor axle
+  difference(){
+    union(){
+      cylinder(r=r_axle+wall*2, h=h_axle);
+      axleSupport();  
+      rotate([0,0,120])
+      axleSupport();  
+      rotate([0,0,240])
+      axleSupport();  
+    }
+    translate([0,0,2])
+    cylinder(r=r_axle, h=h_axle);
+  }
+  module axleSupport(){
+    translate([-l_axleSupport/2,-w_axleSupport/2,0])
+    cube([l_axleSupport,w_axleSupport,h_axleSupport]);
+  }
+
+  // Outter shell of axle bracket
+  difference(){
+    union(){
+      translate([0,0,-2])
+      cylinder(r=r_shell, h=h_shell);
+    }
+    cylinder(r=r, h=h);
+    color("blue")
+    difference(){
+      cylinder(r=r_shell+10, h=h_shell+50);
+      cylinder(r=r_shell, h=h_shell+50);
+    }
+  }
 }
 
 module poleBracket() {
