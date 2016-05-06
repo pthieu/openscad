@@ -6,7 +6,7 @@ wall = 2;
 // Pole Bracket
 r_pole = 10 + tolerance/2;
 r_poleWrapper = r_pole + wall+1;
-h_poleWrapper = 80; // Full size 80
+h_poleWrapper = 40; // Full size 80
 
 // Fan head bracket
 w_slit = 2;
@@ -19,28 +19,31 @@ z_poleWrapper = 3; // Pole Bracket
 w = 0.5; // width of each slice in curve
 depth_fanHeadBracketFin = 8; // how deep curve is (or how fat)
 // translate([0,0,16]) {
-//   fanHeadBracket();
-//   translate([0,0,z_poleWrapper])
-//   poleBracket();
+  fanHeadBracket();
+  translate([0,0,z_poleWrapper])
+  poleBracket();
 // }
+rotate([180,0,0])
 fanAdapter();
 
 module fanAdapter(){
   r=(33.3+tolerance)/2;
   h=15;
 
-  h_shell = 10;
-  r_shell = r_fanHeadBracket-tolerance/2+0.15; //thickness of outter shell
+  h_shell = 11;
+  // r_shell = r_fanHeadBracket-tolerance/2+0.15; //thickness of outter shell
+  r_shell = r_fanHeadBracket+wall; //thickness of outter shell
   w_leg = 8;
   depth_leg = 4;
 
-  r_axle = (4+tolerance)/2; // radius of the motor's axle
-  h_axle = 27;
-  w_slit = wall*2+0.1; // width of slit in axle, to give some tolerance
+  tolerance_axle = 0.2;
+  r_axle = (3.1+tolerance_axle)/2; // radius of the motor's axle
+  h_axle = 16;
+  // w_slit = wall*2+0.1; // width of slit in axle, to give some tolerance
 
   l_axleSupport = r_shell*2-1;
   w_axleSupport = wall;
-  h_axleSupport = h_shell-wall;
+  h_axleSupport = h_shell;
 
   // inner bracket on motor axle
   difference(){
@@ -63,15 +66,16 @@ module fanAdapter(){
   // Outter shell of axle bracket
   difference(){
     union(){
-      translate([0,0,-2])
+      translate([0,0,0])
       cylinder(r=r_shell, h=h_shell);
     }
-    cylinder(r=r, h=h);
-    color("blue")
-    difference(){
-      cylinder(r=r_shell+10, h=h_shell+50);
-      cylinder(r=r_shell, h=h_shell+50);
-    }
+    // Shell's inner radius
+    cylinder(r=r+1, h=h);
+    // color("blue")
+    // difference(){
+    //   cylinder(r=r_shell+10, h=h_shell+50);
+    //   cylinder(r=r_shell, h=h_shell+50);
+    // }
   }
 }
 
@@ -89,13 +93,13 @@ module fanHeadBracket() {
       // Fan head bracket wall
       cylinder(r=r_fanHeadBracket+2, h=h_fanHeadBracket);
       // Fan head bracket fins
-      fanHeadBracketFin();
-      rotate([0,0,90])
-      fanHeadBracketFin();
-      rotate([0,0,180])
-      fanHeadBracketFin();
-      rotate([0,0,270])
-      fanHeadBracketFin();
+      // fanHeadBracketFin();
+      // rotate([0,0,90])
+      // fanHeadBracketFin();
+      // rotate([0,0,180])
+      // fanHeadBracketFin();
+      // rotate([0,0,270])
+      // fanHeadBracketFin();
     }
     // cylinder(r=r_fanHeadBracket-wall, h=h_fanHeadBracket);
     // Slit in ring
