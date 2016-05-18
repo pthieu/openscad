@@ -13,14 +13,18 @@ module clip() {
   r_holder = 105/2; // dimensions of bag holder
   r_holder_outter = r_holder+28.4;
   h_holder = wall;
-  color("blue")
-  difference(){
-    cube([l_bar, depth_bar, h_bar+wall*2]); // outter clip
-    translate([-wall,0,wall-tolerance/2])
-    cube([l_bar, depth_bar, h_bar+tolerance]); // spacing of metal bar
-  }
-  translate([l_bar,0,0])
-  cube([28.4, depth_bar, h_bar+wall*2]);
+
+  // this is the side bar clip
+  // color("blue")
+  // difference(){
+  //   cube([l_bar, depth_bar, h_bar+wall*2]); // outter clip
+  //   translate([-wall,0,wall-tolerance/2])
+  //   cube([l_bar, depth_bar, h_bar+tolerance]); // spacing of metal bar
+  // }
+  // this is the extension of the side clip into the circular clip
+  // translate([l_bar,0,0])
+  // cube([28.4, depth_bar, h_bar+wall*2]);
+  
   // Below is the clip for the circular garbage bag holder
   // top plate
   color("blue")
@@ -36,6 +40,18 @@ module clip() {
     killOutsideQuarters();
     color("red")
     cylinder(r=r_holder, h=h_bar);
+  }
+
+  l_clip_holster = 10;
+  w_clip_holster = l_clip_holster;
+  h_clip_holster = wall*2;
+  // screw holster
+  translate([r_holder_outter+l_bar-wall-r_holder,-l_clip_holster,0]){
+    difference(){
+      cube([l_clip_holster,w_clip_holster,h_clip_holster]);
+      translate([l_clip_holster/2,l_clip_holster/2])
+      cylinder(r=1.5,h=h_clip_holster); // m3 slot
+    }
   }
 
   module garbageHolder(){
