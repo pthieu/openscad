@@ -1,8 +1,9 @@
 //General
-$fn = 36;
+$fn = 72;
 tolerance = 0.5;
 wall = 2;
 
+rotate([-90,0,0])
 clip();
 
 module clip() {
