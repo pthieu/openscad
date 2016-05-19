@@ -21,6 +21,7 @@ h_chute_main_wall = 20;
 chuteBody();
 mirror([0,0,1])
 chuteTunnel();
+chuteConnector();
 
 module chuteBody(){
   // main body
@@ -41,6 +42,18 @@ module chuteBody(){
   color("blue")
   translate([0,depth_chute_inner+wall,h_chute_inner])
   cube([w_chute_inner+wall*2, wall, h_chute_main_wall]);
+}
+
+module chuteConnector(){
+  x_connector = 46.7 + wall;
+  w_connector = 6;
+  depth_connector = 5;
+
+  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,+h_chute_inner/2])
+  difference(){
+    cube([w_connector,depth_connector,h_chute_inner], center=true);
+    cube([w_connector/3+0.001,depth_connector+0.001,h_chute_inner+0.001], center=true);
+  }
 }
 
 module chuteTunnel(){
