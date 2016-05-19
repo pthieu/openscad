@@ -4,8 +4,11 @@ tolerance = 0.5;
 wall = 2;
 
 w_chute_inner = 80;
-depth_chute_inner = 35;
-h_chute_inner = 10;
+depth_chute_inner = 45;
+h_chute_inner = 40;
+
+h_chute_inner_slot = 5;
+depth_chute_inner_slot = 10;
 
 depth_chute_side_wall = depth_chute_inner+wall*2;
 h_chute_side_wall = 30;
@@ -19,13 +22,18 @@ chuteTunnel();
 module chuteBody(){
   // main body
   difference(){
+    // main body
     cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_inner]);
+    // hollow out
     translate([wall,wall,0])
     cube([w_chute_inner, depth_chute_inner, h_chute_inner]);
+    // slot on left side
+    translate([w_chute_inner,wall,h_chute_inner-h_chute_inner_slot])
+    cube([wall*3, depth_chute_inner_slot, 5]);
   }
   // side wall
-  translate([0,0,h_chute_inner])
-  cube([wall, depth_chute_side_wall, h_chute_side_wall]);
+  translate([0,wall,h_chute_inner])
+  cube([wall, depth_chute_side_wall-wall, h_chute_side_wall]);
   // main wall
   color("blue")
   translate([0,depth_chute_inner+wall,h_chute_inner])
