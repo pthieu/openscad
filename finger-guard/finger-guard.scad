@@ -110,10 +110,10 @@ module l2Leg(){
 }
 
 module l2Dome(){
-  translate([0,0,-wall*3-1])
+  translate([0,0,-wall*5-1])
   difference(){
-    cylinder(r=r_L1_size-0.5+w_finger_shell, h=wall*5);
-    cylinder(r=r_L1_size-0.5+tolerance/2, h=wall*5);
+    cylinder(r=r_L1_size-0.5+w_finger_shell, h=wall*7);
+    cylinder(r=r_L1_size-0.5+tolerance/2, h=wall*7);
   }
   translate([0,0,wall*2-1.1])
   difference(){
