@@ -7,12 +7,15 @@ w_chute_inner = 80;
 depth_chute_inner = 45;
 h_chute_inner = 40;
 
-h_chute_inner_slot = 5;
-depth_chute_inner_slot = 10;
+// left side slot cutout
+h_chute_inner_slot = 8;
+depth_chute_inner_slot = 18;
 
+// side wall
 depth_chute_side_wall = depth_chute_inner+wall*2;
 h_chute_side_wall = 30;
 
+// main wall
 h_chute_main_wall = 20;
 
 chuteBody();
@@ -25,11 +28,11 @@ module chuteBody(){
     // main body
     cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_inner]);
     // hollow out
-    translate([wall,wall,0])
-    cube([w_chute_inner, depth_chute_inner, h_chute_inner]);
+    translate([wall,wall,-0.5])
+    cube([w_chute_inner, depth_chute_inner, h_chute_inner+1]);
     // slot on left side
     translate([w_chute_inner,wall,h_chute_inner-h_chute_inner_slot])
-    cube([wall*3, depth_chute_inner_slot, 5]);
+    cube([wall*3, depth_chute_inner_slot, h_chute_inner_slot+0.001]);
   }
   // side wall
   translate([0,wall,h_chute_inner])
@@ -42,14 +45,20 @@ module chuteBody(){
 
 module chuteTunnel(){
   h_chute_tunnel = 40;
-  skew([0, 60, 0, 0, 0, 0])
   difference(){
-    cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_tunnel]);
-    translate([wall,wall,0])
-    cube([w_chute_inner, depth_chute_inner, h_chute_tunnel]);
+    union(){
+      skew([0, 60, 0, 0, 0, 0])
+      cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_tunnel]);
+      translate([0,(depth_chute_inner+wall*2)/2,0])
+      nutBracket(l=20);
+      translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+      rotate([0,0,180])
+      nutBracket(l=20);
+    }
+    skew([0, 60, 0, 0, 0, 0])
+    translate([wall,wall,-0.5])
+    cube([w_chute_inner, depth_chute_inner, h_chute_tunnel+1]);
   }
-  translate([0,(depth_chute_inner+wall*2)/2,0])
-  nutBracket();
 }
 
 /*skew takes an array of six angles:
@@ -71,14 +80,15 @@ multmatrix(matrix)
   children();
 }
 
-module nutBracket(){
+module nutBracket(l=10){
   h = 3;
-  l = 10;
   w = 10;
   r_m3 = 3/2;
+  offset_m3 = r_m3*2;
   translate([0,0,h/2])
   difference(){
     cube([l,w,h], center=true);
+    translate([-l/2+r_m3+offset_m3,0,0])
     cylinder(r=r_m3, h=h*2, center=true);
   }
 }

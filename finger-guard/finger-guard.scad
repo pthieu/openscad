@@ -29,9 +29,9 @@ l2Ring();
 // finger Tip Piece
 module l2Ring(){
   color("blue")
-  translate([-(r_L1_tube+r_L1_size+w_L1_legs*2-1), 0, 10.5])
+  translate([-(r_L1_tube+r_L1_size+w_L1_legs*2-1), 0, 10.15])
   rotate([0,-90,0])
-  text_extrude("PGT",size=4,extrusion_height=2, center=true);
+  text_extrude("PGT",size=6,extrusion_height=3, center=true);
   l2Legs();
   translate([0,0,l_L1_legs])
   l2Dome();
@@ -82,7 +82,7 @@ module l1Legs(){
 
 module l1Leg(){
   translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube])
-  cube([w_L1_legs, w_L1_legs*3, l_L1_legs-1]);
+  cube([w_L1_legs, w_L1_legs*3, l_L1_legs]);
 }
 
 module l2Legs(){
@@ -92,33 +92,40 @@ module l2Legs(){
 }
 
 module l2Leg(){
+  // legs
   difference(){
-    translate([w_L1_legs,0,0])
+    translate([w_L1_legs,0,-1])
     l1Leg();
-    translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 1])
+    translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
     rotate([0,90,0])
     cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
   }
-  translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 1])
+  // Sockets/notch holders
+  translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
   rotate([0,90,0])
   difference(){
     cylinder(r=r_L1_notch+wall, h=l_L1_notch);
     cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
   }
-  translate([r_L1_tube+r_L1_size-w_L1_legs-0.5, -w_L1_legs*1.5, r_L1_tube+l_L1_legs-1-w_L1_legs])
+  translate([r_L1_tube+r_L1_size-w_L1_legs, -w_L1_legs*1.5, r_L1_tube+l_L1_legs-1-w_L1_legs])
   cube([w_L1_legs*2, w_L1_legs*3, w_L1_legs]);
 }
 
 module l2Dome(){
-  translate([0,0,-wall*5-1])
+  translate([0,0,-wall*4-1])
   difference(){
-    cylinder(r=r_L1_size-0.5+w_finger_shell, h=wall*7);
-    cylinder(r=r_L1_size-0.5+tolerance/2, h=wall*7);
+    cylinder(r=r_L1_size+w_finger_shell, h=wall*6);
+    translate([0,0,-0.001])
+    cylinder(r=r_L1_size+tolerance/2, h=wall*6+0.01);
+    // bottom finger cutout
+    translate([0,-10,0])
+    scale([1.5,1,1])
+    sphere(r=6);
   }
   translate([0,0,wall*2-1.1])
   difference(){
-    sphere(r=r_L1_size-0.5+w_finger_shell);
-    sphere(r=r_L1_size-0.5+tolerance/2);
+    sphere(r=r_L1_size+w_finger_shell);
+    sphere(r=r_L1_size+tolerance/2);
     translate([0,0,-15/2])
     cube([30,30,15], center=true);
   }
