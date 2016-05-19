@@ -15,10 +15,12 @@ r_L1_notch = 3/2;
 
 w_finger_shell = 1.2;
 
+r_finger_shell = r_L1_size;
+
 l1Ring();
-translate([0,0,l_L1_legs])
+// translate([0,0,l_L1_legs])
 // rotate([180,0,0])
-l2Ring();
+// l2Ring();
 
 // finger Tip Piece
 module l2Ring(){
@@ -49,20 +51,30 @@ module l1Notch(){
   // side notches
   translate([r_L1_tube*2+r_L1_size-tolerance-1, 0, 0])
   rotate([0,90,0])
-  cylinder(r=r_L1_notch, h = l_L1_notch);
+  cylinder(r=r_L1_notch-tolerance/3, h = l_L1_notch);
   translate([r_L1_tube*2+r_L1_size-tolerance+l_L1_notch-1, 0, 0])
-  sphere(r=r_L1_notch);
+  sphere(r=r_L1_notch-tolerance/3);
 }
 
 module l1Legs(){
   l1Leg();
   mirror([1,0,0])
   l1Leg();
+
+  l1LegSupport();
+  mirror([1,0,0])
+  l1LegSupport();
+
+  module l1LegSupport(){
+    translate([r_L1_tube*2+r_L1_size-w_L1_legs,0,r_L1_tube])
+    rotate([0,72,0])
+    cube([w_L1_legs*1.5, w_L1_legs*3, w_L1_legs], center=true);
+  }
 }
 
 module l1Leg(){
-  translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs, r_L1_tube-1])
-  cube([w_L1_legs, w_L1_legs*2, l_L1_legs]);
+  translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube-1])
+  cube([w_L1_legs, w_L1_legs*3, l_L1_legs]);
 }
 
 module l2Legs(){
@@ -72,17 +84,22 @@ module l2Legs(){
 }
 
 module l2Leg(){
-  translate([w_L1_legs,0,0])
-  l1Leg();
+  difference(){
+    translate([w_L1_legs,0,0])
+    l1Leg();
+    translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
+    rotate([0,90,0])
+    cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
+  }
   translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
   rotate([0,90,0])
   difference(){
     cylinder(r=r_L1_notch+wall, h=l_L1_notch);
-    cylinder(r=r_L1_notch+tolerance/2, h=l_L1_notch);
+    cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
   }
 
-  translate([r_L1_tube+r_L1_size-w_L1_legs, -w_L1_legs, r_L1_tube+l_L1_legs-1-w_L1_legs])
-  cube([w_L1_legs*2, w_L1_legs*2, w_L1_legs]);
+  translate([r_L1_tube+r_L1_size-w_L1_legs, -w_L1_legs*1.5, r_L1_tube+l_L1_legs-1-w_L1_legs])
+  cube([w_L1_legs*2, w_L1_legs*3, w_L1_legs]);
 }
 
 module l2Dome(){
@@ -90,5 +107,12 @@ module l2Dome(){
   difference(){
     cylinder(r=r_L1_size+w_finger_shell, h=wall*2);
     cylinder(r=r_L1_size+tolerance/2, h=wall*2);
+  }
+  translate([0,0,wall*2-1.1])
+  difference(){
+    sphere(r=r_L1_size+w_finger_shell);
+    sphere(r=r_L1_size+tolerance/2);
+    translate([0,0,-15/2])
+    cube([30,30,15], center=true);
   }
 }
