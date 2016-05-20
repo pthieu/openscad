@@ -5,7 +5,7 @@ wall = 2;
 
 w_chute_inner = 80;
 depth_chute_inner = 45;
-h_chute_inner = 40;
+h_chute_inner = 10;
 
 // left side slot cutout
 h_chute_inner_slot = 8;
@@ -18,10 +18,16 @@ h_chute_side_wall = 30;
 // main wall
 h_chute_main_wall = 20;
 
-chuteBody();
-mirror([0,0,1])
-chuteTunnel();
-chuteConnector();
+difference(){
+  chuteBody();
+  translate([-0.001,wall-0.001+6,wall*5])
+  cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
+  translate([7,depth_chute_inner,h_chute_inner])
+  cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
+}
+// mirror([0,0,1])
+// chuteTunnel();
+// chuteConnector();
 
 module chuteBody(){
   // main body
