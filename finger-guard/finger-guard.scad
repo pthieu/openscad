@@ -16,14 +16,26 @@ l_L1_back_legs = 9+1;
 l_L1_notch = 3;
 r_L1_notch = 3/2;
 
+l_L3_legs = 5;
+h_L3_bracket = 10;
+
 w_finger_shell = 1.2;
 
 r_finger_shell = r_L1_size;
 
-l1Ring();
+// l1Ring();
 // translate([0,0,l_L1_legs])
-// rotate([180,0,0])
+// // rotate([180,0,0])
 // l2Ring();
+// translate([0,0,-l_L1_back_legs])
+l3Ring();
+
+// piece after knuckle
+module l3Ring(){
+  // l3Legs();
+  // rotate([-60,0,0])
+  l3Bracket();
+};
 
 // finger Tip Piece
 module l2Ring(){
@@ -84,12 +96,6 @@ module l1Leg(){
   cube([w_L1_legs, w_L1_legs*3, l_L1_legs]);
 }
 
-module l2Legs(){
-  l2Leg();
-  mirror([1,0,0])
-  l2Leg();
-}
-
 module l1BackLeg(){
   rotate([180,0,0])
   translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube-1])
@@ -108,6 +114,12 @@ module l1BackLegs(){
     mirror([1,0,0])
     l1LegSupport();
   }
+}
+
+module l2Legs(){
+  l2Leg();
+  mirror([1,0,0])
+  l2Leg();
 }
 
 module l2Leg(){
@@ -147,5 +159,42 @@ module l2Dome(){
     sphere(r=r_L1_size+tolerance/2);
     translate([0,0,-15/2])
     cube([30,30,15], center=true);
+  }
+}
+
+module l3Legs(){
+  l3Leg();
+  mirror([1,0,0])
+  l3Leg();
+}
+
+module l3Leg(){
+  rotate([180,0,0])
+  difference(){
+    translate([w_L1_legs+r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube-1])
+    cube([w_L1_legs, w_L1_legs*3, l_L3_legs]);
+    // holes in legs
+    translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
+    rotate([0,90,0])
+    cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
+  }
+  translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
+  rotate([0,90,0])
+  difference(){
+    cylinder(r=r_L1_notch+wall, h=l_L1_notch);
+    cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
+  }
+}
+
+module l3Bracket(){
+  difference(){
+    translate([0,0,-l_L3_legs-r_L1_tube/2-h_L3_bracket/2])
+    difference(){
+      cylinder(r=r_L1_size+wall, h=h_L3_bracket);
+      translate([0,0,-0.001])
+      cylinder(r=r_L1_size, h=h_L3_bracket+0.002);
+    }
+    translate([0,-r_L1_size-1,-h_L3_bracket/2-r_L1_tube/2])
+    cube([r_L1_size,r_L1_size,h_L3_bracket+0.001], center=true);
   }
 }
