@@ -32,7 +32,7 @@ l3Ring();
 
 // piece after knuckle
 module l3Ring(){
-  // l3Legs();
+  l3Legs();
   // rotate([-60,0,0])
   l3Bracket();
 };
@@ -178,23 +178,29 @@ module l3Leg(){
     rotate([0,90,0])
     cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
   }
-  translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0])
-  rotate([0,90,0])
-  difference(){
-    cylinder(r=r_L1_notch+wall, h=l_L1_notch);
-    cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
+  // support notches/holes
+  translate([r_L1_tube+r_L1_size+w_L1_legs/2, 0, 0]){
+    rotate([0,90,0])
+    difference(){
+      cylinder(r=r_L1_notch+wall, h=l_L1_notch);
+      cylinder(r=r_L1_notch+tolerance/1.5, h=l_L1_notch);
+    }
+    translate([-w_L1_legs,-w_L1_legs*1.5,-l_L3_legs-r_L1_tube])
+    cube([w_L1_legs*2, w_L1_legs*3, w_L1_legs]);
   }
 }
 
 module l3Bracket(){
+  translate([0,0,-h_L3_bracket/1.5])
   difference(){
-    translate([0,0,-l_L3_legs-r_L1_tube/2-h_L3_bracket/2])
+    translate([0,0,-l_L3_legs-r_L1_tube/2])
     difference(){
       cylinder(r=r_L1_size+wall, h=h_L3_bracket);
       translate([0,0,-0.001])
       cylinder(r=r_L1_size, h=h_L3_bracket+0.002);
     }
-    translate([0,-r_L1_size-1,-h_L3_bracket/2-r_L1_tube/2])
-    cube([r_L1_size,r_L1_size,h_L3_bracket+0.001], center=true);
+    // slot at bottom of finger
+    translate([0,-r_L1_size-1,-r_L1_tube/2])
+    cube([r_L1_size*1.5,r_L1_size,h_L3_bracket+0.001], center=true);
   }
 }
