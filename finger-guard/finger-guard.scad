@@ -11,6 +11,7 @@ r_L1_tube = 5/2;
 
 l_L1_legs  = 15+1;
 w_L1_legs = 2;
+l_L1_back_legs = 9+1;
 
 l_L1_notch = 3;
 r_L1_notch = 3/2;
@@ -19,12 +20,10 @@ w_finger_shell = 1.2;
 
 r_finger_shell = r_L1_size;
 
-// l1Ring();
-translate([0,0,l_L1_legs])
-rotate([180,0,0])
-l2Ring();
-
-
+l1Ring();
+// translate([0,0,l_L1_legs])
+// rotate([180,0,0])
+// l2Ring();
 
 // finger Tip Piece
 module l2Ring(){
@@ -44,6 +43,7 @@ module l1Ring(){
   circle(r = r_L1_tube);
 
   l1Legs();
+  l1BackLegs();
 
   translate([0,0,l_L1_legs])
   l1Notches();
@@ -72,14 +72,13 @@ module l1Legs(){
   l1LegSupport();
   mirror([1,0,0])
   l1LegSupport();
-
-  module l1LegSupport(){
-    translate([r_L1_tube*2+r_L1_size-w_L1_legs,0,r_L1_tube])
-    rotate([0,72,0])
-    cube([w_L1_legs*1.5, w_L1_legs*3, w_L1_legs], center=true);
-  }
 }
 
+module l1LegSupport(){
+  translate([r_L1_tube*2+r_L1_size-w_L1_legs,0,r_L1_tube])
+  rotate([0,72,0])
+  cube([w_L1_legs*1.5, w_L1_legs*3, w_L1_legs], center=true);
+}
 module l1Leg(){
   translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube])
   cube([w_L1_legs, w_L1_legs*3, l_L1_legs]);
@@ -89,6 +88,26 @@ module l2Legs(){
   l2Leg();
   mirror([1,0,0])
   l2Leg();
+}
+
+module l1BackLeg(){
+  rotate([180,0,0])
+  translate([r_L1_tube+r_L1_size-w_L1_legs/2, -w_L1_legs*1.5, r_L1_tube-1])
+  cube([w_L1_legs, w_L1_legs*3, l_L1_back_legs]);
+  translate([0,0,-l_L1_back_legs])
+  l1Notches();
+}
+
+module l1BackLegs(){
+  l1BackLeg();
+  mirror([1,0,0])
+  l1BackLeg();
+
+  rotate([180,0,0]){
+    l1LegSupport();
+    mirror([1,0,0])
+    l1LegSupport();
+  }
 }
 
 module l2Leg(){
