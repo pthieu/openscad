@@ -18,6 +18,7 @@ r_L1_notch = 3/2;
 
 l_L3_legs = 5;
 h_L3_bracket = 10;
+r_L3_size = (18+tolerance)/2;
 
 w_finger_shell = 1.2;
 
@@ -195,12 +196,12 @@ module l3Bracket(){
   difference(){
     translate([0,0,-l_L3_legs-r_L1_tube/2])
     difference(){
-      cylinder(r=r_L1_size+wall, h=h_L3_bracket);
+      cylinder(r=r_L3_size+wall/2, h=h_L3_bracket);
       translate([0,0,-0.001])
-      cylinder(r=r_L1_size, h=h_L3_bracket+0.002);
+      cylinder(r=r_L3_size, h=h_L3_bracket+0.002);
     }
     // slot at bottom of finger
-    translate([0,-r_L1_size-1,-r_L1_tube/2])
-    cube([r_L1_size*1.5,r_L1_size,h_L3_bracket+0.001], center=true);
+    translate([0,-r_L3_size-1,-r_L1_tube/2])
+    cube([r_L3_size*1.25,r_L3_size,h_L3_bracket+0.001], center=true);
   }
 }
