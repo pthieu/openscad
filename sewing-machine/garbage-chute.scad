@@ -20,20 +20,29 @@ h_chute_main_wall = h_chute_side_wall;
 
 difference(){
   chuteBody();
-  translate([-0.001,wall-0.001+6,wall*5])
-  cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
-  translate([7,depth_chute_inner,h_chute_inner])
-  cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
+  // translate([-0.001,wall-0.001+6,wall*5])
+  // cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
+  // translate([7,depth_chute_inner,h_chute_inner])
+  // cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
 }
-mirror([0,0,1])
-chuteTunnel();
+// mirror([0,0,1])
+// chuteTunnel();
 chuteConnector();
 
 module chuteBody(){
   // main body
   difference(){
-    // main body
-    cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_inner]);
+    union(){
+      // main body
+      cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_inner]);
+      // right nut bracket
+      translate([0,(depth_chute_inner+wall*2)/2,0])
+      nutBracket(l=20);
+      // left nut bracket
+      translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+      rotate([0,0,180])
+      nutBracket(l=20);
+    }
     // hollow out
     translate([wall,wall,-0.5])
     cube([w_chute_inner, depth_chute_inner, h_chute_inner+1]);
@@ -48,6 +57,16 @@ module chuteBody(){
   color("blue")
   translate([0,depth_chute_inner+wall,h_chute_inner])
   cube([w_chute_inner+wall*2, wall, h_chute_main_wall]);
+  // left side wall
+  translate([w_chute_inner+wall*2,wall+depth_chute_inner_slot,h_chute_inner])
+  rotate([0,-90,0])
+  linear_extrude(height=wall)
+  polygon([
+    [0,0],
+    [0,h_chute_side_wall-wall*2],
+    [h_chute_side_wall,h_chute_side_wall-wall*2],
+    [h_chute_side_wall,6],
+  ]);
 }
 
 module chuteConnector(){
@@ -73,11 +92,13 @@ module chuteConnector(){
 }
 
 module chuteTunnel(){
-  h_chute_tunnel = 36;
+  h_chute_tunnel = 30;
+  angle_chute_tunnel = 40;
+  depth_tunnel_L1 = depth_chute_inner;
   difference(){
     union(){
-      skew([0, 0, 0, 0, -55, 0])
-      cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_tunnel]);
+      skew([0, 0, 0, 0, -angle_chute_tunnel, 0])
+      cube([w_chute_inner+wall*2, depth_tunnel_L1+wall*2, h_chute_tunnel]);
       // right nut bracket
       translate([0,(depth_chute_inner+wall*2)/2,0])
       nutBracket(l=20);
@@ -86,9 +107,9 @@ module chuteTunnel(){
       rotate([0,0,180])
       nutBracket(l=20);
     }
-    skew([0, 0, 0, 0, -55, 0])
+    skew([0, 0, 0, 0, -angle_chute_tunnel, 0])
     translate([wall,wall,-0.5])
-    cube([w_chute_inner, depth_chute_inner, h_chute_tunnel+1]);
+    cube([w_chute_inner, depth_tunnel_L1, h_chute_tunnel+1]);
   }
 }
 
