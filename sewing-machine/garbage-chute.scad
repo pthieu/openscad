@@ -8,15 +8,15 @@ depth_chute_inner = 45;
 h_chute_inner = 10;
 
 // left side slot cutout
-h_chute_inner_slot = 8;
+h_chute_inner_slot = 4;
 depth_chute_inner_slot = 18;
 
 // side wall
 depth_chute_side_wall = depth_chute_inner+wall*2;
-h_chute_side_wall = 30;
+h_chute_side_wall = 32;
 
 // main wall
-h_chute_main_wall = 20;
+h_chute_main_wall = h_chute_side_wall;
 
 difference(){
   chuteBody();
@@ -25,9 +25,9 @@ difference(){
   translate([7,depth_chute_inner,h_chute_inner])
   cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
 }
-// mirror([0,0,1])
-// chuteTunnel();
-// chuteConnector();
+mirror([0,0,1])
+chuteTunnel();
+chuteConnector();
 
 module chuteBody(){
   // main body
@@ -53,28 +53,40 @@ module chuteBody(){
 module chuteConnector(){
   x_connector = 46.7 + wall;
   w_connector = 6;
+  w_connector_space = 3;
+  h_connector = h_chute_inner+h_chute_side_wall;
+  step_connector = h_connector/10;
   depth_connector = 5;
 
-  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,+h_chute_inner/2])
+  // Connector for metal bracket and chute body
+  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2])
   difference(){
-    cube([w_connector,depth_connector,h_chute_inner], center=true);
-    cube([w_connector/3+0.001,depth_connector+0.001,h_chute_inner+0.001], center=true);
+    cube([w_connector,depth_connector,h_connector], center=true);
+    cube([w_connector_space+0.001,depth_connector+0.001,h_chute_inner+h_chute_side_wall+0.001], center=true);
+    translate([0,0,-h_connector/2.25])
+    for(i=[0:step_connector:h_connector]){
+      translate([0,0,i])
+      rotate([0,90,0])
+      cylinder(h=w_connector+0.001, center=true);
+    }
   }
 }
 
 module chuteTunnel(){
-  h_chute_tunnel = 40;
+  h_chute_tunnel = 36;
   difference(){
     union(){
-      skew([0, 60, 0, 0, 0, 0])
+      skew([0, 0, 0, 0, -55, 0])
       cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h_chute_tunnel]);
+      // right nut bracket
       translate([0,(depth_chute_inner+wall*2)/2,0])
       nutBracket(l=20);
+      // left nut bracket
       translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
       rotate([0,0,180])
       nutBracket(l=20);
     }
-    skew([0, 60, 0, 0, 0, 0])
+    skew([0, 0, 0, 0, -55, 0])
     translate([wall,wall,-0.5])
     cube([w_chute_inner, depth_chute_inner, h_chute_tunnel+1]);
   }
