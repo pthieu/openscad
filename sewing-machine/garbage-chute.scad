@@ -76,19 +76,34 @@ module chuteConnector(){
   h_connector = h_chute_inner+h_chute_side_wall;
   step_connector = h_connector/10;
   depth_connector = 5;
+  h_arm_head = step_connector*2;
+  w_arm_head = w_connector_space-tolerance;
+  depth_arm_head = depth_connector-tolerance;
 
   // Connector for metal bracket and chute body
-  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2])
-  difference(){
-    cube([w_connector,depth_connector,h_connector], center=true);
-    cube([w_connector_space+0.001,depth_connector+0.001,h_chute_inner+h_chute_side_wall+0.001], center=true);
-    translate([0,0,-h_connector/2.25])
-    for(i=[0:step_connector:h_connector]){
-      translate([0,0,i])
+  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2]){
+    difference(){
+      cube([w_connector,depth_connector,h_connector], center=true);
+      cube([w_connector_space+0.001,depth_connector+0.001,h_chute_inner+h_chute_side_wall+0.001], center=true);
+      translate([0,0,-h_connector/2.25])
+      for(i=[0:step_connector:h_connector]){
+        translate([0,0,i])
+        rotate([0,90,0])
+        cylinder(h=w_connector+0.001, center=true);
+      }
+    }
+    //arm
+    translate([(-w_connector_space+tolerance)/2,(-depth_connector+tolerance)/2,-w_connector])
+    difference(){
+      cube([w_arm_head,depth_arm_head,h_arm_head]);
+      translate([0,depth_arm_head/2,h_arm_head/2])
       rotate([0,90,0])
       cylinder(h=w_connector+0.001, center=true);
     }
+    translate([(-w_connector_space+tolerance)/2,depth_arm_head/2,-40])
+    cube([w_arm_head,depth_arm_head,40]);
   }
+
 }
 
 module chuteTunnel(){
