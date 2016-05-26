@@ -2,6 +2,7 @@
 $fn = 18;
 tolerance = 0.5;
 wall = 2;
+r_m3 = 3/2;
 
 w_chute_inner = 80;
 depth_chute_inner = 45;
@@ -19,7 +20,7 @@ h_chute_side_wall = 32;
 h_chute_main_wall = h_chute_side_wall;
 
 difference(){
-  chuteBody();
+  // chuteBody();
   // translate([-0.001,wall-0.001+6,wall*5])
   // cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
   // translate([7,depth_chute_inner,h_chute_inner])
@@ -73,37 +74,54 @@ module chuteConnector(){
   x_connector = 46.7 + wall;
   w_connector = 6;
   w_connector_space = 3;
+  depth_connector = 10;
   h_connector = h_chute_inner+h_chute_side_wall;
   step_connector = h_connector/10;
-  depth_connector = 5;
-  h_arm_head = step_connector*2;
+  h_arm_head = step_connector*4;
   w_arm_head = w_connector_space-tolerance;
   depth_arm_head = depth_connector-tolerance;
+  h_arm = 39;
+  w_arm_leg = 10;
+  x_arm_leg_hole = w_arm_leg/2+1;
 
-  // Connector for metal bracket and chute body
-  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2]){
-    difference(){
-      cube([w_connector,depth_connector,h_connector], center=true);
-      cube([w_connector_space+0.001,depth_connector+0.001,h_chute_inner+h_chute_side_wall+0.001], center=true);
-      translate([0,0,-h_connector/2.25])
-      for(i=[0:step_connector:h_connector]){
-        translate([0,0,i])
-        rotate([0,90,0])
-        cylinder(h=w_connector+0.001, center=true);
-      }
-    }
-    //arm
-    translate([(-w_connector_space+tolerance)/2,(-depth_connector+tolerance)/2,-w_connector])
-    difference(){
-      cube([w_arm_head,depth_arm_head,h_arm_head]);
-      translate([0,depth_arm_head/2,h_arm_head/2])
-      rotate([0,90,0])
-      cylinder(h=w_connector+0.001, center=true);
-    }
-    translate([(-w_connector_space+tolerance)/2,depth_arm_head/2,-40])
-    cube([w_arm_head,depth_arm_head,40]);
+  // // Connector for metal bracket and chute body
+  // translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2]){
+  //   difference(){
+  //     cube([w_connector,depth_connector,h_connector], center=true);
+  //     cube([w_connector_space+0.001,depth_connector+0.001,h_chute_inner+h_chute_side_wall+0.001], center=true);
+  //     translate([0,0,-h_connector/2.25])
+  //     for(i=[0:step_connector:h_connector]){
+  //       translate([0,0,i])
+  //       rotate([0,90,0])
+  //       cylinder(r=r_m3, h=w_connector+0.001, center=true);
+  //     }
+  //   }
+  // }
+  //arm
+  translate([x_connector, depth_chute_inner+depth_connector/2+wall*2,h_connector/2])
+  translate([(-w_connector_space+tolerance)/2,(-depth_connector+tolerance)/2,-w_connector+h_arm_head])
+  mirror([0,0,1])
+  difference(){
+    cube([w_arm_head,depth_arm_head,h_arm_head*2]);
+    translate([0,depth_arm_head/2,h_arm_head/2])
+    rotate([0,90,0])
+    cylinder(r=r_m3,h=w_connector+0.001, center=true);
   }
-
+  translate([
+    x_connector+(-w_connector_space+tolerance)/2,
+    (-depth_connector+tolerance)/2+depth_chute_inner+depth_connector/2+wall*2,
+    0
+  ]){
+    mirror([0,0,1])
+    cube([w_arm_head,depth_arm_head,h_arm]);
+    translate([0,0,-h_arm])
+    difference(){
+      cube([w_arm_leg,w_arm_leg-tolerance,wall]);
+      color("red")
+      translate([x_arm_leg_hole,depth_arm_head/2,0])
+      cylinder(r=r_m3, h=w_connector+0.001, center=true);
+    }
+  }
 }
 
 module chuteTunnel(){
@@ -150,7 +168,6 @@ multmatrix(matrix)
 module nutBracket(l=10){
   h = 3;
   w = 10;
-  r_m3 = 3/2;
   offset_m3 = r_m3*2;
   translate([0,0,h/2])
   difference(){
