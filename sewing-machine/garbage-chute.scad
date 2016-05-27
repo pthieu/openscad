@@ -1,5 +1,5 @@
 //General
-$fn = 18;
+$fn = 36;
 tolerance = 0.5;
 wall = 2;
 r_m3 = 3/2;
@@ -42,11 +42,10 @@ h_chute_vertical = 35;
 // mirror([0,0,1])
 // chuteTunnel();
 
-// // T3 vertical extension
-// rotate([90,0,0]) // only for isolation and supports
-// color("green")
-// translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
-// chuteVertical(h=h_chute_vertical);
+// T3 vertical extension
+color("green")
+translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
+chuteVertical(h=h_chute_vertical);
 
 // // T4 chute diagonal tunnel -- has offset on nut brackets
 // color("pink")
@@ -55,12 +54,12 @@ h_chute_vertical = 35;
 //   chuteTunnel(y_nut_offset=0.55);
 // }
 
-rotate([0,180,0]) // only for isolation and supports 
-// T5 red tube
-mirror([0,0,1])
-translate([0,-35.55,h_chute_vertical+h_chute_tunnel])
-color("red")
-chuteTube();
+// rotate([0,180,0]) // only for isolation and supports 
+// // T5 red tube
+// mirror([0,0,1])
+// translate([0,-35.55,h_chute_vertical+h_chute_tunnel])
+// color("red")
+// chuteTube();
 
 module chuteVertical(h=10){
   difference(){
