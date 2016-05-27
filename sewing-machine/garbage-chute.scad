@@ -1,5 +1,5 @@
 //General
-$fn = 18;
+$fn = 36;
 tolerance = 0.5;
 wall = 2;
 r_m3 = 3/2;
@@ -19,16 +19,81 @@ h_chute_side_wall = 32;
 // main wall
 h_chute_main_wall = h_chute_side_wall;
 
+// T2 chute
+h_chute_tunnel = 40;
+angle_chute_tunnel = 40;
+depth_tunnel_L1 = depth_chute_inner;
+
 difference(){
-  // chuteBody();
+  color("blue")
+  chuteBody();
   // translate([-0.001,wall-0.001+6,wall*5])
   // cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
   // translate([7,depth_chute_inner,h_chute_inner])
   // cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
 }
-// mirror([0,0,1])
-chuteTunnel();
+mirror([0,0,1]){
+  chuteTunnel();
+  color("red")
+  chuteTube();
+}
 // chuteConnector();
+
+module chuteTube(){
+  // T3 cylindrical tube
+  // tube side wall
+  translate([0,13.44,h_chute_tunnel])
+  rotate([90,0,0])
+  linear_extrude(height=wall)
+  polygon([
+    [0,0],
+    [w_chute_inner+wall*2,0],
+    [w_chute_inner+wall*2,75]
+  ]);
+  // tube other side wall
+  translate([0,13.44-depth_tunnel_L1-wall,h_chute_tunnel])
+  rotate([90,0,0])
+  linear_extrude(height=wall)
+  polygon([
+    [0,0],
+    [w_chute_inner+wall*2,0],
+    [w_chute_inner+wall*2,75] // then change this
+  ]);
+  // tube opening end nut bracket
+  translate([w_chute_inner+wall,13.44-depth_tunnel_L1-wall*2,h_chute_tunnel])
+  cube([wall,depth_tunnel_L1+wall*2,20]); // tube top end skew repair
+  // tube body
+  translate([0,13.44-depth_tunnel_L1-wall*2,h_chute_tunnel])
+  cube([wall,depth_tunnel_L1+wall*2,wall]); // tube top end skew repair
+  skew([0, 0, 0, 0, 0, 40]){ // if you change this
+    translate([0,-11.05,h_chute_tunnel])
+    rotate([0,90,0])
+    difference(){
+      cylinder(r=depth_tunnel_L1/2+wall, h=w_chute_inner+wall*2);
+      translate([0,0,wall])
+      cylinder(r=depth_tunnel_L1/2, h=w_chute_inner+wall*2+0.002);
+      translate([0,-depth_tunnel_L1/2-wall*1.5,-0.001])
+      cube([depth_tunnel_L1/2+wall,depth_tunnel_L1+wall*3,w_chute_inner+wall*2+0.002]);
+    }
+  }
+
+  // bracket
+  translate([0,-35,h_chute_tunnel]) {
+    difference(){
+      union(){
+        // right nut bracket -- bottom
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- bottom
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+      translate([0,0,-1])
+      cube([w_chute_inner+wall, depth_chute_inner, h_chute_inner]);
+    }
+  }
+}
 
 module chuteBody(){
   // main body
@@ -125,9 +190,6 @@ module chuteConnector(){
 }
 
 module chuteTunnel(){
-  h_chute_tunnel = 40;
-  angle_chute_tunnel = 40;
-  depth_tunnel_L1 = depth_chute_inner;
   difference(){
     union(){
       // main tunnel body
