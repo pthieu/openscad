@@ -42,17 +42,17 @@ h_chute_vertical = 35;
 // mirror([0,0,1])
 // chuteTunnel();
 
-// T3 vertical extension
-color("green")
-translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
-chuteVertical(h=h_chute_vertical);
-
-// // T4 chute diagonal tunnel -- has offset on nut brackets
-// color("pink")
+// // T3 vertical extension
+// color("green")
 // translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
-// mirror([0,0,1]){
-//   chuteTunnel(y_nut_offset=0.55);
-// }
+// chuteVertical(h=h_chute_vertical);
+
+// T4 chute diagonal tunnel -- has offset on nut brackets
+color("pink")
+translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
+mirror([0,0,1]){
+  chuteTunnel(y_nut_offset=0.55);
+}
 
 // rotate([0,180,0]) // only for isolation and supports 
 // // T5 red tube
