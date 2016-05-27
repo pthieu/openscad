@@ -1,5 +1,5 @@
 //General
-$fn = 36;
+$fn = 18;
 tolerance = 0.5;
 wall = 2;
 r_m3 = 3/2;
@@ -24,20 +24,74 @@ h_chute_tunnel = 40;
 angle_chute_tunnel = 40;
 depth_tunnel_L1 = depth_chute_inner;
 
-difference(){
-  color("blue")
-  chuteBody();
-  // translate([-0.001,wall-0.001+6,wall*5])
-  // cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
-  // translate([7,depth_chute_inner,h_chute_inner])
-  // cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
+// T3 chute vertical extension
+h_chute_vertical = 35;
+
+// T1 main body
+// difference(){
+//   color("blue")
+//   chuteBody();
+//   // translate([-0.001,wall-0.001+6,wall*5])
+//   // cube([w_chute_inner*2, depth_chute_inner-10, h_chute_side_wall*2]);
+//   // translate([7,depth_chute_inner,h_chute_inner])
+//   // cube([w_chute_inner-10, wall*3, h_chute_main_wall+0.001]);
+// }
+// // chuteConnector();
+
+// // T2 chute diagonal tunnel
+// mirror([0,0,1])
+// chuteTunnel();
+
+// // T3 vertical extension
+// rotate([90,0,0]) // only for isolation and supports
+// color("green")
+// translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
+// chuteVertical(h=h_chute_vertical);
+
+// // T4 chute diagonal tunnel -- has offset on nut brackets
+// color("pink")
+// translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
+// mirror([0,0,1]){
+//   chuteTunnel(y_nut_offset=0.55);
+// }
+
+rotate([0,180,0]) // only for isolation and supports 
+// T5 red tube
+mirror([0,0,1])
+translate([0,-35.55,h_chute_vertical+h_chute_tunnel])
+color("red")
+chuteTube();
+
+module chuteVertical(h=10){
+  difference(){
+    union(){
+      cube([w_chute_inner+wall*2, depth_chute_inner+wall*2, h]);
+      // top nut brackets
+      translate([0,0.55,h_chute_vertical-3]) {
+        // right nut bracket -- bottom
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- bottom
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+      // bottom nut brackets
+      translate([0,0.55,0]) {
+        // right nut bracket -- bottom
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- bottom
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+    }
+    translate([wall,wall,0])
+    cube([w_chute_inner, depth_chute_inner, h]);
+  }
 }
-mirror([0,0,1]){
-  chuteTunnel();
-  color("red")
-  chuteTube();
-}
-// chuteConnector();
+
 
 module chuteTube(){
   // T3 cylindrical tube
@@ -63,8 +117,8 @@ module chuteTube(){
   translate([w_chute_inner+wall,13.44-depth_tunnel_L1-wall*2,h_chute_tunnel])
   cube([wall,depth_tunnel_L1+wall*2,20]); // tube top end skew repair
   // tube body
-  translate([0,13.44-depth_tunnel_L1-wall*2,h_chute_tunnel])
-  cube([wall,depth_tunnel_L1+wall*2,wall]); // tube top end skew repair
+  translate([0,13.44-depth_tunnel_L1-wall*1.5,h_chute_tunnel])
+  cube([wall,depth_tunnel_L1+wall,wall]); // tube top end skew repair
   skew([0, 0, 0, 0, 0, 40]){ // if you change this
     translate([0,-11.05,h_chute_tunnel])
     rotate([0,90,0])
@@ -189,19 +243,25 @@ module chuteConnector(){
   // }
 }
 
-module chuteTunnel(){
+module chuteTunnel(y_nut_offset=0){
   difference(){
     union(){
       // main tunnel body
       skew([0, 0, 0, 0, -angle_chute_tunnel, 0])
       cube([w_chute_inner+wall*2, depth_tunnel_L1+wall*2, h_chute_tunnel]);
+
+      //top nut brackets
       // right nut bracket -- top
-      translate([0,(depth_chute_inner+wall*2)/2,0])
-      nutBracket(l=20);
-      // left nut bracket -- top
-      translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
-      rotate([0,0,180])
-      nutBracket(l=20);
+      translate([0,y_nut_offset,0]){
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- top
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+
+      // bottom nut brackets
       translate([0,-35,h_chute_tunnel-3]){
         // right nut bracket -- bottom
         translate([0,(depth_chute_inner+wall*2)/2,0])
