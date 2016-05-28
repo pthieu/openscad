@@ -61,6 +61,60 @@ mirror([0,0,1]){
 // color("red")
 // chuteTube();
 
+// T6 twist tube
+color("violet")
+translate([0,-(depth_chute_inner+wall*2)-22.1139,-h_chute_tunnel*2-h_chute_vertical])
+chuteTwist(y_nut_offset=0.55);
+
+// T7 diagonal tunnel
+translate([0,0,-h_chute_tunnel*3-h_chute_vertical])
+rotate([0,0,60])
+translate([-w_chute_inner+0.36+wall,-95.893-wall*2-depth_chute_inner,0])
+mirror([0,0,1])
+chuteTunnel();
+
+module chuteTwist(y_nut_offset=0){
+  translate([w_chute_inner/2+wall, depth_chute_inner/2+wall])
+  mirror([0,0,1])
+  skew([0, 50, 0, 0, -50, 0])
+  linear_extrude(height=h_chute_tunnel, twist=-60, slices=100, $fn=72)
+  difference(){
+    square(size=[w_chute_inner+wall*2, depth_chute_inner+wall*2], center=true);
+    square(size=[w_chute_inner, depth_chute_inner], center=true);
+  }
+  difference(){
+    union(){
+      //top nut brackets
+      // right nut bracket -- top
+      translate([0,y_nut_offset,-3]){
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- top
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+      // bottom nut brackets
+      rotate([0,0,60])
+      translate([-6.05-10,-79.85-wall-depth_chute_inner/2-5,-h_chute_tunnel]){
+      // translate([-5.05+20/2,-80.23-wall-depth_chute_inner/2+5,-h_chute_tunnel]){
+        // right nut bracket -- bottom
+        translate([0,(depth_chute_inner+wall*2)/2,0])
+        nutBracket(l=20);
+        // left nut bracket -- bottom
+        translate([w_chute_inner+wall*2,(depth_chute_inner+wall*2)/2,0])
+        rotate([0,0,180])
+        nutBracket(l=20);
+      }
+    }
+    translate([w_chute_inner/2+wall, depth_chute_inner/2+wall])
+    mirror([0,0,1])
+    skew([0, 50, 0, 0, -50, 0])
+    linear_extrude(height=h_chute_tunnel, twist=-60, slices=100, $fn=72)
+    square(size=[w_chute_inner, depth_chute_inner], center=true);
+  }
+}
+
 module chuteVertical(h=10){
   difference(){
     union(){
