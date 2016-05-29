@@ -48,11 +48,11 @@ h_chute_vertical = 35;
 // chuteVertical(h=h_chute_vertical);
 
 // T4 chute diagonal tunnel -- has offset on nut brackets
-color("pink")
-translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
-mirror([0,0,1]){
-  chuteTunnel(y_nut_offset=0.55);
-}
+// color("pink")
+// translate([0,-13.44-depth_tunnel_L1/2+tolerance/1.31,-h_chute_vertical-h_chute_tunnel])
+// mirror([0,0,1]){
+//   chuteTunnel(y_nut_offset=0.55);
+// }
 
 // rotate([0,180,0]) // only for isolation and supports 
 // // T5 red tube
@@ -67,17 +67,17 @@ translate([0,-(depth_chute_inner+wall*2)-22.1139,-h_chute_tunnel*2-h_chute_verti
 chuteTwist(y_nut_offset=0.55);
 
 // T7 diagonal tunnel
-translate([0,0,-h_chute_tunnel*3-h_chute_vertical])
-rotate([0,0,60])
-translate([-w_chute_inner+0.36+wall,-95.893-wall*2-depth_chute_inner,0])
-mirror([0,0,1])
-chuteTunnel();
+// translate([0,0,-h_chute_tunnel*3-h_chute_vertical])
+// rotate([0,0,60])
+// translate([-w_chute_inner+0.36+wall,-95.893-wall*2-depth_chute_inner,0])
+// mirror([0,0,1])
+// chuteTunnel();
 
 module chuteTwist(y_nut_offset=0){
   translate([w_chute_inner/2+wall, depth_chute_inner/2+wall])
   mirror([0,0,1])
   skew([0, 50, 0, 0, -50, 0])
-  linear_extrude(height=h_chute_tunnel, twist=-60, slices=100, $fn=72)
+  linear_extrude(height=h_chute_tunnel, twist=-60, slices=500, $fn=36)
   difference(){
     square(size=[w_chute_inner+wall*2, depth_chute_inner+wall*2], center=true);
     square(size=[w_chute_inner, depth_chute_inner], center=true);
