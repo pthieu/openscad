@@ -10,7 +10,9 @@ include <Thread_Library.scad>;
 $fn=72;
 
 reg = 91 / 2; // Regular Mouth Jar Cap Inner Radius
-wide = 87 / 2; // Wide Mouth Jar Cap Inner Radius
+// 91 for 3", 121 for 4"
+InnerBucketHole = 77; // 77 for 3" buckets, probably 101.6 for 4"
+// wide = 87 / 2; // Wide Mouth Jar Cap Inner Radius
 wall_thickness = 2;
 cap_depth = 13;
 ring_height = cap_depth + wall_thickness;
@@ -39,7 +41,7 @@ module cap(rad)
         translate([0,0,cap_depth]) {
           difference(){
             cylinder(r=(rad+wall_thickness), wall_thickness, $fa=30); //top surface
-            cylinder(r=75/2, wall_thickness*2, $fa=30); //top surface
+            cylinder(r=InnerBucketHole/2, wall_thickness*2, $fa=30); //top surface
           }
         }
       }
