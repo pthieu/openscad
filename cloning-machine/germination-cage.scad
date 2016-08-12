@@ -70,11 +70,18 @@ mirror([0,0,1]) {
     slit(w_slit=4);
   }
   // Tiny seed cage
-  translate([0,0,h_cover-wall*2-h_cage/4])
-  difference() {
-    color("purple")
-    cylinder(r=5, h=h_cage/4);
-    cylinder(r=5-wall, h=h_cage/4);
+  translate([0,0,h_cover-wall*2-h_cage/4]){
+    difference() {
+      color("purple")
+      cylinder(r=5, h=h_cage/4);
+      cylinder(r=5-wall, h=h_cage/4);
+      translate([0,0,-wall*12])
+      rotate([0,0,45])
+      slit(w_slit=1);
+      translate([0,0,-wall*12])
+      rotate([0,0,135])
+      slit(w_slit=1);
+    }
   }
 }
 
