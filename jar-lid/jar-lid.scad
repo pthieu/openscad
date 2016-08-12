@@ -9,14 +9,13 @@ include <Thread_Library.scad>;
 
 $fn=72;
 
-reg = 91 / 2; // Regular Mouth Jar Cap Inner Radius
-// 91 for 3", 121 for 4"
-InnerBucketHole = 77; // 77 for 3" buckets, probably 101.6 for 4"
+reg = 121 / 2; // Regular Mouth Jar Cap Inner Radius // 91mm for 3", 121mm for 3.75"
+InnerBucketHole = 93; // 77mm for 3" buckets, probably 93mm for 3.75"
 // wide = 87 / 2; // Wide Mouth Jar Cap Inner Radius
 wall_thickness = 2;
-cap_depth = 13;
+cap_depth = 13; // 13mm for smaller cap 20mm for large whey cap
 ring_height = cap_depth + wall_thickness;
-thread_height = 20;
+thread_height = 20; // this is how much thread protrudes out i think
 thread_quality = 45; //~10 for draft, 45, 60,72, or 90 for higher qualities, higher numbers dramatically increase render time, and increase the poly count, wich will increase file sizes and slicing times, but will make smoother curves
 
 module ring (rad)
@@ -24,7 +23,7 @@ module ring (rad)
     difference()
     {
       cylinder(r=(rad+wall_thickness), cap_depth, $fa=30);
-      trapezoidThreadNegativeSpace(length=cap_depth + wall_thickness, pitch=6,
+      trapezoidThreadNegativeSpace(length=cap_depth + wall_thickness, pitch=6, // 6 for the bcaa bucket cap, 6 for large whey cap
         pitchRadius=(rad-1.524), threadHeightToPitch=(1.524/6.35), profileRatio=1.66,
         threadAngle=30, RH=true, countersunk=0, clearance=0.1, backlash=0.1,
         stepsPerTurn=thread_quality); //threads and hole
