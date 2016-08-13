@@ -3,7 +3,7 @@ $fn = 72;
 tolerance = 0.5;
 wall = 1;
 r_hole = 65/2;
-r_cover_body = r_hole;
+r_cover_body = r_hole - tolerance/2;
 r_cover_body_inner = r_cover_body - wall;
 r_cover_cap = r_cover_body + 5; // 5mm rim?
 h_cover = 60 + wall; // total height including rim
@@ -22,24 +22,24 @@ mirror([0,0,1]) {
   difference(){
     union(){
       cylinder(r=r_cover_body, h=h_cover);
-      cylinder(r=r_cover_cap, h=wall);
+      cylinder(r=r_cover_cap, h=wall*1.5);
     }
     // Inner body space
     translate([0,0,wall])
-    cylinder(r=r_cover_body_inner, h=h_cover-wall*3);
-    slit();
+    cylinder(r=r_cover_body_inner-wall*5, h=h_cover-wall*3);
+    slit(w_slit=14);
     rotate([0,0,30])
-    slit();
+    slit(w_slit=14);
     rotate([0,0,60])
-    slit();
+    slit(w_slit=14);
     rotate([0,0,90])
-    slit();
+    slit(w_slit=14);
     rotate([0,0,120])
-    slit();
+    slit(w_slit=14);
     rotate([0,0,150])
-    slit();
+    slit(w_slit=14);
     rotate([0,0,180])
-    slit();
+    slit(w_slit=14);
   }
   // seed cage
   difference() {
