@@ -2,6 +2,7 @@
 $fn = 72;
 tolerance = 0.5;
 wall = 3; // wall is actually *2 this
+r_m3 = 1.5;
 
 r_pipe = 24.1/2+tolerance/2; // includes pipe wall
 l_pipe_hole = 25.4+r_pipe+wall;
@@ -80,10 +81,10 @@ module rodEntry(touchGround=false, axisCorner=true, rotateHoles=0){
     rotate([0,0,rotateHoles]){
       translate([0,0,l_pipe_hole/1.5])
       rotate([90,0,0])
-      cylinder(r=1.5+tolerance/2, h=r_outter*2);
+      cylinder(r=r_m3, h=r_outter*2);
       translate([0,0,l_pipe_hole/1.5])
       rotate([0,90,0])
-      cylinder(r=1.5+tolerance/2, h=r_outter*2);
+      cylinder(r=r_m3, h=r_outter*2);
     }
   }
 }
