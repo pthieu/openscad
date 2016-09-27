@@ -3,14 +3,16 @@ $fn = 12;
 tolerance = 0.5;
 wall = 2;
 
-l_fixture = 610;
+pieces = 4;
 
-l_cover = (l_fixture - 60*2)/4;
+l_fixture = 610-tolerance*pieces;
+
+l_cover = (l_fixture - (60 - tolerance)*2)/pieces;
 // l_cover = 10;
-cover_wall = 0.7;
-w_cover_inner = 70;
+cover_wall = 1;
+w_cover_inner = 70+tolerance/2;
 w_cover_outter = w_cover_inner+cover_wall*2;
-h_top_plane = 0.3+0.2;
+h_top_plane = 0.3+0.2*2;
 h_cover = 8;
 
 
